@@ -25,21 +25,34 @@ export class ProjectsManager {
     }
     const newProject = new Project(data)
     newProject.ui.addEventListener("click", () => {
-      console.log("click");
-      
       const projectsPage = document.getElementById("projects-page")
       const detailsPage = document.getElementById("project-details")
       if (!(projectsPage && detailsPage)) { return }
       projectsPage.style.display = "none"
       detailsPage.style.display = "flex"
-      console.log(projectsPage.style);
-      console.log(detailsPage.style);
-      
+      this.setDetailsPage(newProject)
     })
     this.ui.appendChild(newProject.ui)
     this.list.push(newProject)
     return newProject
   }
+
+  private setDetailsPage(project: Project) {
+    const detailsPage = document.getElementById("project-details")
+    if (!detailsPage) { return }
+    const name = detailsPage.querySelector("[data-project-info='name']")
+    if (name) {name.textContent = project.name }
+    const desc = detailsPage.querySelector("[data-project-info='description']")
+    if (desc) {desc.textContent = project.description }
+    const projectStatus = detailsPage.querySelector("[data-project-info='projectStatus']")
+    if (projectStatus) {projectStatus.textContent = project.projectStatus }
+    const cost = detailsPage.querySelector("[data-project-info='cost']")
+    if (cost) {cost.textContent = '$ ' + project.cost.toString()}
+    const userRole = detailsPage.querySelector("[data-project-info='userRole']")
+    if (userRole) {userRole.textContent = project.userRole }
+    const finishDate = detailsPage.querySelector("[data-project-info='finishDate']")
+    if (finishDate) {finishDate.textContent = project.finishDate.toLocaleDateString("sv-SE") }
+  } 
 
   getProject(id: string): Project | undefined {
     return this.list.find(project => project.id === id)
