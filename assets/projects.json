@@ -1,0 +1,21 @@
+[
+  {
+    "cost": 1000,
+    "progress": 0,
+    "name": "Defauelt Project",
+    "description": "This is just a default app project",
+    "projectStatus": "Pending",
+    "userRole": "Architect",
+    "finishDate": "2024-04-10T15:51:06.804Z",
+    "id": "bf91336f-eb2f-4886-b0cc-d826e064e547"
+  },  {
+    "cost": 1000,
+    "progress": 0,
+    "name": "Defaewult Project",
+    "description": "This is just a default app project",
+    "projectStatus": "Pending",
+    "userRole": "Architect",
+    "finishDate": "2024-04-10T15:51:06.804Z",
+    "id": "bf91336f-eb2f-4886-b0cc-d826e064e557"
+  }
+]

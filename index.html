@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Static start page</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Round">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <aside id="sidebar">
+    <img id="company-logo" src="./assets/company-logo.svg" alt="">
+    <ul id="nav-buttons">
+      <li id="projects-page-btn"><span class="material-icons-round">apartment</span>Projects</li>
+      <li id="users-page-btn"><span class="material-icons-round">groups</span>Users</li>
+    </ul>
+  </aside>
+  <main id="content">
+    <div class="page" id="projects-page">
+      <dialog id="new-project-modal">
+        <form id="new-project-form">
+          <h2 style="margin: 20px; padding-top: 10px;">New Project</h2>
+          <div class="input-list">
+            <div class="form-field-container">
+              <label for="project_name"><span class="material-icons-round">apartment</span>Name</label>
+              <input type="text" id="project_name" name="name" placeholder="What's the name of your project?" >
+              <p style="color: gray; font-size: var(--font-sm); margin-top: 5px; font-style: italic;">TIP: Give it a short name</p>
+            </div>
+            <div class="form-field-container">
+              <label for="project_desc"><span class="material-icons-round">subject</span>Description</label>
+              <textarea id="project_desc" name="description" cols="30" rows="5" placeholder="Give your project a nice description! So people is jealous about it."></textarea>
+            </div>
+            <div class="form-field-container">
+              <label for="project_role"><span class="material-icons-round">person</span>Role</label>
+              <select id="project_role" name="userRole">
+                <option>Architect</option>
+                <option>Engineer</option>
+                <option>Developer</option>
+              </select>
+            </div>
+            <div class="form-field-container">
+              <label for="project_status"><span class="material-icons-round">not_listed_location</span>Status</label>
+              <select id="project_status" name="status">
+                <option>Pending</option>
+                <option>Active</option>
+                <option>Finished</option>
+              </select>
+            </div>
+            <div class="form-field-container">
+              <label for="finishDate">
+                <span class="material-icons-round">calendar_month</span>
+                Finish Date
+              </label>
+              <input type="date" id="finishDate" name="finishDate" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}}"></input>
+            </div>
+            <div style="display: flex; margin: 10px 0px 10px auto; column-gap: 10px;">
+              <button type="button" id="form-cancel" style="background-color: transparent;">Cancel</button>
+              <button type="submit" style="background-color: rgb(18, 145, 18);">Accept</button>
+            </div>
+          </div>
+        </form>
+      </dialog>
+      <dialog id="error-modal" class="error-dialog">
+        <h2 style="margin: 20px; padding-top: 10px;">New Project</h2>
+          <div id="error-message">
+          </div>  
+      </dialog>
+      <header id="page-header">
+        <h5>Projects</h5>
+        <div style="display: flex; align-items: center; column-gap: 15px;">
+          <span id="import-projects-btn" class="material-icons-round action-icon">file_upload</span>
+          <span id="export-projects-btn" class="material-icons-round action-icon">file_download</span>  
+          <button id="new-project-btn" click="show"><span class="material-icons-round">add</span>New Project</button>  
+        </div>        
+      </header>
+      <div id="projects-list">
+        
+      </div>
+    </div>
+    <div class="page" id="project-details" style="display: none;">
+      <header>
+        <div>
+          <h2>Hospital Center</h2>
+          <p style="color: #969696">Community hospital location</p>
+        </div>
+      </header>
+      <div class="main-page-content">
+        <div style="display: flex; flex-direction: column; row-gap: 30px;">
+          <div class="dashboard-card" style="padding: 30px 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 30px; margin-bottom: 30px;">
+              <p style="font-size: 20px; background-color: #ca8134; aspect-ratio: 1; border-radius: 100%; padding: 12px;">HC</p>
+              <button class="btn-secondary"><p style="width: 100%;">Edit</p></button>
+            </div>
+            <div style="padding-left: 30px;">
+              <h4>Hospital Center</h4>
+              <p>Community hospital located at downtown</p>
+            </div>
+            <div style="padding-left: 20px; display: grid; grid-template-columns:repeat(auto-fill, minmax(100px, 1fr)); margin: 10px;">
+              <div>
+                <p style="color: #969696;">Status</p>
+                <p>Active</p>
+              </div>
+              <div>
+                <p style="color: #969696;">Cost</p>
+                <p>$ 2'542.00</p>
+              </div>
+              <div>
+                <p style="color: #969696;">Role</p>
+                <p>Engineer</p>
+              </div>
+              <div>
+                <p style="color: #969696;">Finish Date</p>
+                <p>2023-05-01</p>
+              </div>
+            </div>
+            <div style="background-color: #969696; border-radius: 10px; margin: 30px;">
+              <div style="height: 20px; width: 80%; background-color: green; border-radius: 10px 0 0 10px; text-align: center;">80%</div>
+            </div>
+          </div>
+          <div class="dashboard-card" style="flex-grow: 1;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <h2 style="padding-left: 30px;">To-do</h2>
+              <div style="margin: 10px; display: flex; justify-content: space-between; align-items: center;">
+                <span class="material-icons-round" style="margin-right: 10px;">search</span>
+                <input type="text" placeholder="Search To-Do's by name" style="height: 12px; margin: 10px 0;">
+                <span class="material-icons-round" style="margin-left: 10px;">add</span>
+              </div>
+            </div> 
+            <div style="padding: 0 20px 10px 20px;">
+              <div class="todo-item" style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                  <div style="display: flex;  align-items: center; border-radius: 5px; padding: 10px; background-color: #969696;">
+                    <span class="material-icons-round">
+                      construction
+                      </span>
+                  </div>
+                  <p style="margin: 10px">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+                </div>
+                <p>Fri, 20 sep</p>
+              </div>
+              <div class="todo-item" style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                  <div style="display: flex;  align-items: center; border-radius: 5px; padding: 10px; background-color: #969696;">
+                    <span class="material-icons-round">
+                      construction
+                      </span>
+                  </div>
+                  <p style="margin: 10px">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+                </div>
+                <p>Fri, 20 sep</p>
+              </div>
+              <div class="todo-item" style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; justify-content: space-between;">
+                  <div style="display: flex;  align-items: center; border-radius: 5px; padding: 10px; background-color: #969696;">
+                    <span class="material-icons-round">
+                      construction
+                      </span>
+                  </div>
+                  <p style="margin: 10px">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+                </div>
+                <p>Fri, 20 sep</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="viewer-container" class="dashboard-card"></div>
+      </div>
+    </div>
+    <div class="page" id="user-page" style="display: none;">
+      <dialog id="new-user-modal">
+        <form>
+          <h2 style="margin: 20px; padding-top: 10px;">New User</h2>
+          <div class="input-list">
+            <div style="display: flex; flex-direction: column; align-items: center;">
+              <img class="user-image" src="assets/User.png" alt="" >
+            </div>
+            <div class="form-field-container">
+              <label for="user_image">Profile Picture</label>
+              <input type="file" id="user_image" accept="image/*">
+            </div>
+            <div class="form-field-container">
+              <label for="user_name">Name</label>
+              <input type="text" id="user_name" placeholder="What's the name of your project?" >
+            </div>
+            <div class="form-field-container">
+              <label for="user_job">Job title</label>
+              <input type="text" id="user_job" placeholder="What's the name of your project?" >
+            </div>
+            <div class="form-field-container">
+              <label for="user_desc">Description</label>
+              <textarea id="user_desc" cols="30" rows="5" placeholder="Give your project a nice description! So people is jealous about it."></textarea>
+            </div>
+            <div class="form-field-container">
+              <label for="user_projects">Projects</label>
+              <select id="user_projects" multiple>
+                <option>Project 1</option>
+                <option>Project 2</option>
+                <option>Project 3</option>
+                <option>Project 4</option>
+                <option>Project 5</option>
+                <option>Project 6</option>
+              </select>
+            </div>
+            <div style="display: flex; margin: 10px 0px 10px auto; column-gap: 10px;">
+              <input type="reset" style="background-color: transparent;">Cancel</input>
+              <!-- <button type="submit" style="background-color: rgb(18, 145, 18);">Accept</button> -->
+            </div>
+          </div>
+        </form>
+      </dialog>
+      <header>
+          <div>
+            <h2 style="margin-bottom: 10px;">People</h2>
+            <p style="color: #969696">Project Users</p>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <p style="margin-right: 10px;">Switch User listing view</p>
+            <label class="switch">
+              <input type="checkbox">
+              <span class="slider round"></span>
+            </label>
+            <button class="btn-secondary"><p style="width: 100%;">Add User</p></button>
+          </div>
+      </header>
+      <div id="user-listing" style="display: none;">
+        <div class="user-card">
+          <img src="assets/User.png" alt="" class="user-image">
+          <div style="display: flex; flex-direction: column; align-items: center;">
+            <h1>Username 1</h1>
+            <p style="color: #969696;">Job title</p>  
+          </div>
+          <p style="margin: 20px 0;">Trivia and long information about the company where the person works.</p>
+          <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+            <div class="infobox">
+              <h2>320</h2>
+              <p>Activities</p>
+            </div>
+            <div class="infobox">
+              <h2>43h</h2>
+              <p>Planned</p>
+            </div>
+            <div class="infobox">
+              <h2>2</h2>
+              <p>Projects</p>
+            </div>
+          </div>
+        </div>
+        <div class="user-card">
+          <img src="assets/User.png" alt="" class="user-image">
+          <div style="display: flex; flex-direction: column; align-items: center;">
+            <h1>Username 2</h1>
+            <p style="color: #969696;">Job title</p>  
+          </div>
+          <p style="margin: 20px 0;">Trivia and long information about the company where the person works.</p>
+          <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+            <div class="infobox">
+              <h2>320</h2>
+              <p>Activities</p>
+            </div>
+            <div class="infobox">
+              <h2>43h</h2>
+              <p>Planned</p>
+            </div>
+            <div class="infobox">
+              <h2>2</h2>
+              <p>Projects</p>
+            </div>
+          </div>
+        </div>
+        <div class="user-card">
+          <img src="assets/User.png" alt="" class="user-image">
+          <div style="display: flex; flex-direction: column; align-items: center;">
+            <h1>Username 3</h1>
+            <p style="color: #969696;">Job title</p>  
+          </div>
+          <p style="margin: 20px 0;">Trivia and long information about the company where the person works.</p>
+          <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+            <div class="infobox">
+              <h2>320</h2>
+              <p>Activities</p>
+            </div>
+            <div class="infobox">
+              <h2>43h</h2>
+              <p>Planned</p>
+            </div>
+            <div class="infobox">
+              <h2>2</h2>
+              <p>Projects</p>
+            </div>
+          </div>
+        </div>
+        <div class="user-card">
+          <img src="assets/User.png" alt="" class="user-image">
+          <div style="display: flex; flex-direction: column; align-items: center;">
+            <h1>Username 4</h1>
+            <p style="color: #969696;">Job title</p>  
+          </div>
+          <p style="margin: 20px 0;">Trivia and long information about the company where the person works.</p>
+          <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+            <div class="infobox">
+              <h2>320</h2>
+              <p>Activities</p>
+            </div>
+            <div class="infobox">
+              <h2>43h</h2>
+              <p>Planned</p>
+            </div>
+            <div class="infobox">
+              <h2>2</h2>
+              <p>Projects</p>
+            </div>
+          </div>
+        </div>
+        <div class="user-card">
+          <img src="assets/User.png" alt="" class="user-image">
+          <div style="display: flex; flex-direction: column; align-items: center;">
+            <h1>Username 5</h1>
+            <p style="color: #969696;">Job title</p>  
+          </div>
+          <p style="margin: 20px 0;">Trivia and long information about the company where the person works.</p>
+          <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+            <div class="infobox">
+              <h2>320</h2>
+              <p>Activities</p>
+            </div>
+            <div class="infobox">
+              <h2>43h</h2>
+              <p>Planned</p>
+            </div>
+            <div class="infobox">
+              <h2>2</h2>
+              <p>Projects</p>
+            </div>
+          </div>
+        </div>
+        <div class="user-card">
+          <img src="assets/User.png" alt="" class="user-image">
+          <div style="display: flex; flex-direction: column; align-items: center;">
+            <h1>Username 6</h1>
+            <p style="color: #969696;">Job title</p>  
+          </div>
+          <p style="margin: 20px 0;">Trivia and long information about the company where the person works.</p>
+          <div style="display: flex; flex-direction: row; flex-wrap: wrap;">
+            <div class="infobox">
+              <h2>320</h2>
+              <p>Activities</p>
+            </div>
+            <div class="infobox">
+              <h2>43h</h2>
+              <p>Planned</p>
+            </div>
+            <div class="infobox">
+              <h2>2</h2>
+              <p>Projects</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="user-listing-table" style="overflow-x:auto; margin: 0 30px;">
+        <table>
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Job title</th>
+              <th>Activities</th>
+              <th>Planned</th>
+              <th>Projects</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Username 1</td>
+              <td>Job title</td>
+              <td>320</td>
+              <td>43h</td>
+              <td>2</td>
+            </tr>
+            <tr>
+              <td>Username 2</td>
+              <td>Job title</td>
+              <td>320</td>
+              <td>43h</td>
+              <td>2</td>
+            </tr>
+            <tr>
+              <td>Username 3</td>
+              <td>Job title</td>
+              <td>320</td>
+              <td>43h</td>
+              <td>2</td>
+            </tr>
+            <tr>
+              <td>Username 4</td>
+              <td>Job title</td>
+              <td>320</td>
+              <td>43h</td>
+              <td>2</td>
+            </tr>
+            <tr>
+              <td>Username 5</td>
+              <td>Job title</td>
+              <td>320</td>
+              <td>43h</td>
+              <td>2</td>
+            </tr>
+            <tr>
+              <td>Username 6</td>
+              <td>Job title</td>
+              <td>320</td>
+              <td>43h</td>
+              <td>2</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>    
+  </main>
+</body>
+<script type="module" src="./src/index.ts"></script>
+</html>
