@@ -5,14 +5,6 @@ function showModal(id: string, data: any) {
   const modal = document.getElementById(id);
   if (modal && modal instanceof HTMLDialogElement) {
     modal.showModal()
-    if(data !== null && data !== undefined) {
-      const content = data;
-      const fragment = modal.appendChild(document.createElement('div'))
-      console.log(fragment.append(data));
-      
-      // fragment.textContent("Error");
-    }
-
   } else {
     console.warn(`Modal with id ${id} was not found`);
   }
@@ -33,18 +25,16 @@ const projectsPage = document.getElementById("projects-page")
 const detailsPage = document.getElementById("project-details")
 const userPage = document.getElementById("user-page")
 
-// console.log(projectsManager.totalCost());
 
-
-const newProjectBtn = document.getElementById('new-project-btn');
+const newProjectBtn = document.getElementById('new-project-btn')
 if (newProjectBtn) {
-  newProjectBtn.addEventListener('click', () => {showModal("new-project-modal", undefined)});  
+  newProjectBtn.addEventListener('click', () => {showModal("new-project-modal", undefined)})  
 } else {
   console.warn('newProjectBtn was not found');
 }
 
 // This document object is provided by the browser, and its main purpose is to help us interact with the DOM.
-const projectForm = document.getElementById('new-project-form');
+const projectForm = document.getElementById('new-project-form')
 if (projectForm && projectForm instanceof HTMLFormElement) {
   projectForm.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -59,12 +49,13 @@ if (projectForm && projectForm instanceof HTMLFormElement) {
     try {
       const project = projectsManager.newProject(projectData)
       projectForm.reset();
-      console.log(projectsManager.totalCost());
+      // console.log(projectsManager.totalCost());
       closeModal("new-project-modal")        
     } catch (error) {
       alert(error)
     }
   })
+
 } else {
   console.warn('projectForm was not found');
 }
@@ -105,7 +96,6 @@ function switchPage(input) {
 
 const projectBtn = document.getElementById('projects-page-btn') 
 const usersBtn = document.getElementById('users-page-btn') 
-const editProjBtn = document.getElementById('edit-project')
 
 projectBtn?.addEventListener("click", () => {
   switchPage('projects')  
@@ -115,8 +105,4 @@ usersBtn?.addEventListener("click", () => {
   switchPage('users')
 })
 
-editProjBtn?.addEventListener("click", (event) => {
-  projectsManager.editProject()
-  // console.log(event.target);
-  
-})
+

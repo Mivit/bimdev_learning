@@ -30,10 +30,8 @@ export class ProjectsManager {
     if (!data.finishDate || !this.isValidDate(data.finishDate)) {
       data.finishDate = new Date(Date.now() + 12096e5) //Today + 14 days
     } 
-    console.log("Random color " + Math.random()*10);
     
     const newProject = new Project(data) 
-    console.log(newProject.ui);
 
     const pElemen = newProject.ui.getElementsByTagName("p")
     pElemen[0].style.backgroundColor = availableColors[Math.floor(Math.random()*6)]
@@ -48,16 +46,6 @@ export class ProjectsManager {
     this.ui.appendChild(newProject.ui)
     this.list.push(newProject)
     return newProject
-  }
-
-  editProject() {
-    const detailsPage = document.getElementById("project-details")
-    const editabelProject = {...Project}
-    console.log(editabelProject);
-    
-    if (!detailsPage) { return }
-    // load project content
-
   }
 
   private setDetailsPage(project: Project) {
