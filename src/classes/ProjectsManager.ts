@@ -1,5 +1,7 @@
 import { IProject, Project } from './Project'
 
+const  availableColors = ["#ca8134", "#55ad99", "#a55d93", "#ad99b9", "#ad2133", "#21ad33", "#bbaaaa"]
+
 export class ProjectsManager {
   list: Project[] = []
   ui: HTMLElement
@@ -22,8 +24,19 @@ export class ProjectsManager {
     const nameInUse = projectNames.includes(data.name)
     if (nameInUse) {
       throw new Error(`A project with the name "${data.name}" is already in use`)
-    }
-    const newProject = new Project(data)
+    } else if (data.name.length <5) {
+      throw new Error(`Project name: "${data.name}" is too short`)
+    } 
+    if (!data.finishDate || !this.isValidDate(data.finishDate)) {
+      data.finishDate = new Date(Date.now() + 12096e5) //Today + 14 days
+    } 
+    console.log("Random color " + Math.random()*10);
+    
+    const newProject = new Project(data) 
+    console.log(newProject.ui);
+
+    const pElemen = newProject.ui.getElementsByTagName("p")
+    pElemen[0].style.backgroundColor = availableColors[Math.floor(Math.random()*6)]
     newProject.ui.addEventListener("click", () => {
       const projectsPage = document.getElementById("projects-page")
       const detailsPage = document.getElementById("project-details")
@@ -37,6 +50,16 @@ export class ProjectsManager {
     return newProject
   }
 
+  editProject() {
+    const detailsPage = document.getElementById("project-details")
+    const editabelProject = {...Project}
+    console.log(editabelProject);
+    
+    if (!detailsPage) { return }
+    // load project content
+
+  }
+
   private setDetailsPage(project: Project) {
     const detailsPage = document.getElementById("project-details")
     if (!detailsPage) { return }
@@ -44,6 +67,14 @@ export class ProjectsManager {
     if (name) {name.textContent = project.name }
     const desc = detailsPage.querySelector("[data-project-info='description']")
     if (desc) {desc.textContent = project.description }
+    
+    // CARD
+    const abbr = detailsPage.querySelector("[data-project-info='abbr']")
+    if (abbr) {abbr.textContent = project.name.slice(0, 2)}
+    const cardName = detailsPage.querySelector("[data-project-info='cardName']")
+    if (cardName) {cardName.textContent = project.name }
+    const cardDescription = detailsPage.querySelector("[data-project-info='cardDescription']")
+    if (cardDescription) {cardDescription.textContent = project.description }
     const projectStatus = detailsPage.querySelector("[data-project-info='projectStatus']")
     if (projectStatus) {projectStatus.textContent = project.projectStatus }
     const cost = detailsPage.querySelector("[data-project-info='cost']")
@@ -51,11 +82,26 @@ export class ProjectsManager {
     const userRole = detailsPage.querySelector("[data-project-info='userRole']")
     if (userRole) {userRole.textContent = project.userRole }
     const finishDate = detailsPage.querySelector("[data-project-info='finishDate']")
-    if (finishDate) {finishDate.textContent = project.finishDate.toLocaleDateString("sv-SE") }
+    if (finishDate) {
+      if(project.finishDate) {
+        finishDate.textContent = project.finishDate.toLocaleDateString("sv-SE") 
+      } else {
+        const today = Date.now();
+
+        finishDate.textContent = Date.now().toLocaleString("sv-SE") 
+      }
+    }
+
+    //Load TODOs
+
   } 
 
   getProject(id: string): Project | undefined {
     return this.list.find(project => project.id === id)
+  }
+
+  getProjectByNames(name: string): Project[] {
+    return this.list.filter(project => project.name === name)
   }
 
   deleteProject(id: string): void {
@@ -70,9 +116,14 @@ export class ProjectsManager {
     return this.list.reduce((total, project) => total + project.cost, 0)
   }
 
-  getProjectByNames(name: string): Project[] {
-    return this.list.filter(project => project.name === name)
+  isValidDate(d: any) {
+    return d instanceof Date && !isNaN(d)
   }
+
+  // TODOS
+  getTodos() {}
+
+  addTodo() {}
 
   exportToJSON(fileName: string = "projects") {
     const json = JSON.stringify(this.list, null, 2)

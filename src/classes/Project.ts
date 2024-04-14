@@ -24,6 +24,12 @@ export class Project implements IProject {
   cost: number = 1000
   progress: number = 0
   id: string
+  todos: [
+    {
+      title: string
+      dueDate: Date
+    }
+  ]
 
   constructor(data: IProject) {
     for (const key in data) {
@@ -31,6 +37,9 @@ export class Project implements IProject {
     }
     this.id = uuidv4()
     this.setUI()
+    // if (!data['finishDate']) {
+    //   this['finishDate'] = data['finishDate']
+    // }
   }
 
   setUI() {
@@ -41,8 +50,8 @@ export class Project implements IProject {
     this.ui.innerHTML = `
     <div class="card-header">
       <div style="display: flex; flex-direction: row">
-        <p style="background-color: #ca8134; margin-right: 10px; padding: 10px; border-radius: 8px; aspect-ratio: 1; height: 2em;">HC</p>
-        <div style="align-content: bottom;">
+        <p id="round-abbr" style="font-size: 20px; aspect-ratio: 1; border-radius: 100%; padding: 12px; text-transform: uppercase;">HC</p>
+        <div style="align-content: bottom; padding: 0 0 0 10px">
           <h5>${this.name}</h5>
           <p>${this.description}</p>
         </div>

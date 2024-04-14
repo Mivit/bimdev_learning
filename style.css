@@ -6,6 +6,9 @@
   --primary-200: #415A66;
   --primary-300: #017CB3;
   --primary-400: #50B6E6;
+  --status-ok: #76c27b;
+  --status-warning: #e8b556;
+  --status-alert: #e85b56;
   --background: #202124;
   --background-100: #26282b;
   --background-200: #3b3c3f;
@@ -16,6 +19,7 @@
   --font-xl: 18px;
   --font-2xl: 20px;
   --font-3xl: 22px;
+  --random-color:  #ca8134
 }
 
 * {
@@ -124,6 +128,10 @@ header {
   justify-content: space-between;
 }
 
+#round-abbr{
+  background-color: var(--random-color);
+}
+
 .project-card {
   background-color: var(--background-100);
   border-radius: 8px;
@@ -178,6 +186,7 @@ header {
   color: white;
   background-color: var(--primary);
 }
+
 
 /* Form Styles */
 
@@ -280,6 +289,7 @@ input:focus, textarea:focus, select:focus {
 }
 
 .todo-item {
+  margin: 0 0 10px 0;
   padding: 20px;
   background-color: var(--background-200);
   border-radius: 10px;
@@ -288,4 +298,20 @@ input:focus, textarea:focus, select:focus {
 
 .todo-item:hover {
   background-color: var(--primary);
+}
+
+.todo-date {
+  min-width: fit-content;
+}
+
+.todo-ok {
+  background-color: var(--status-ok);
+}
+
+.todo-warning {
+  background-color: var(--status-warning);
+}
+
+.todo-alert {
+  background-color: var(--status-alert);
 }

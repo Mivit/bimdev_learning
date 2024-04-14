@@ -85,8 +85,6 @@ if (importProjectsBtn) {
 
 function switchPage(input) {
   if (!(projectsPage && detailsPage && userPage)) { return }
-  console.log(input);
-  
   switch (input) {
     case 'projects':
       detailsPage.style.display = "none"    
@@ -107,6 +105,7 @@ function switchPage(input) {
 
 const projectBtn = document.getElementById('projects-page-btn') 
 const usersBtn = document.getElementById('users-page-btn') 
+const editProjBtn = document.getElementById('edit-project')
 
 projectBtn?.addEventListener("click", () => {
   switchPage('projects')  
@@ -114,4 +113,10 @@ projectBtn?.addEventListener("click", () => {
 
 usersBtn?.addEventListener("click", () => {
   switchPage('users')
+})
+
+editProjBtn?.addEventListener("click", (event) => {
+  projectsManager.editProject()
+  // console.log(event.target);
+  
 })

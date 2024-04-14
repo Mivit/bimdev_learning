@@ -88,17 +88,17 @@
         <div style="display: flex; flex-direction: column; row-gap: 30px;">
           <div class="dashboard-card" style="padding: 30px 0;">
             <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 30px; margin-bottom: 30px;">
-              <p style="font-size: 20px; background-color: #ca8134; aspect-ratio: 1; border-radius: 100%; padding: 12px;">HC</p>
-              <button class="btn-secondary"><p style="width: 100%;">Edit</p></button>
+              <p id="round-abbr" style="font-size: 20px; aspect-ratio: 1; border-radius: 100%; padding: 12px; text-transform: uppercase;" data-project-info="abbr">HC</p>
+              <button id="edit-project" class="btn-secondary"><p style="width: 100%;">Edit</p></button>
             </div>
             <div style="padding-left: 30px;">
-              <h4>Hospital Center</h4>
-              <p>Community hospital located at downtown</p>
+              <h4 data-project-info="cardName">Hospital Center</h4>
+              <p data-project-info="cardDescription">Community hospital located at downtown</p>
             </div>
             <div style="padding-left: 20px; display: grid; grid-template-columns:repeat(auto-fill, minmax(100px, 1fr)); margin: 10px;">
               <div>
                 <p style="color: #969696;">Status</p>
-                <p data-project-info="porjectStatus">Active</p>
+                <p data-project-info="projectStatus">Active</p>
               </div>
               <div>
                 <p style="color: #969696;">Cost</p>
@@ -127,7 +127,7 @@
               </div>
             </div> 
             <div style="padding: 0 20px 10px 20px;">
-              <div class="todo-item" style="display: flex; justify-content: space-between; align-items: center;">
+              <div class="todo-item todo-warning" style="display: flex; justify-content: space-between; align-items: center;">
                 <div style="display: flex; align-items: center; justify-content: space-between;">
                   <div style="display: flex;  align-items: center; border-radius: 5px; padding: 10px; background-color: #969696;">
                     <span class="material-icons-round">
@@ -136,9 +136,9 @@
                   </div>
                   <p style="margin: 10px">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
                 </div>
-                <p>Fri, 20 sep</p>
+                <p class="todo-date">2024-04-12</p>
               </div>
-              <div class="todo-item" style="display: flex; justify-content: space-between; align-items: center;">
+              <div class="todo-item todo-alert" style="display: flex; justify-content: space-between; align-items: center;">
                 <div style="display: flex; align-items: center; justify-content: space-between;">
                   <div style="display: flex;  align-items: center; border-radius: 5px; padding: 10px; background-color: #969696;">
                     <span class="material-icons-round">
@@ -147,9 +147,9 @@
                   </div>
                   <p style="margin: 10px">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
                 </div>
-                <p>Fri, 20 sep</p>
+                <p class="todo-date">Fri, 20 sep</p>
               </div>
-              <div class="todo-item" style="display: flex; justify-content: space-between; align-items: center;">
+              <div class="todo-item todo-ok" style="display: flex; justify-content: space-between; align-items: center;">
                 <div style="display: flex; align-items: center; justify-content: space-between;">
                   <div style="display: flex;  align-items: center; border-radius: 5px; padding: 10px; background-color: #969696;">
                     <span class="material-icons-round">
@@ -158,7 +158,7 @@
                   </div>
                   <p style="margin: 10px">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
                 </div>
-                <p>Fri, 20 sep</p>
+                <p class="todo-date">Fri, 20 sep</p>
               </div>
             </div>
           </div>
