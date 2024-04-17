@@ -1,4 +1,5 @@
 import { IProject, Project } from './Project'
+import type { ProjectStatus, ProjectUserRole } from './Project'
 
 const  availableColors = ["#ca8134", "#55ad99", "#a55d93", "#ad99b9", "#ad2133", "#21ad33", "#bbaaaa"]
 
@@ -32,7 +33,6 @@ export class ProjectsManager {
     } 
     
     const newProject = new Project(data) 
-
     const pElemen = newProject.ui.getElementsByTagName("p")
     pElemen[0].style.backgroundColor = availableColors[Math.floor(Math.random()*6)]
     newProject.ui.addEventListener("click", () => {
@@ -46,6 +46,37 @@ export class ProjectsManager {
     this.ui.appendChild(newProject.ui)
     this.list.push(newProject)
     return newProject
+  }
+
+  updateProject(data: IProject, name: string): Project {
+    const project = this.getProjectsByName(name)[0]
+    // Set updated values 
+    console.log(data.name.length);
+    
+    if (data.name.length <5) {
+      throw new Error(`Project name: "${data.name}" is too short`)
+    }
+    if (data.description.length <3) {
+      throw new Error(`Decscription is too short`)
+    }
+    if (!["Pending", "Active", "Finished"].indexOf(data.projectStatus)) {
+      throw new Error('Status not set')
+    }
+    if (!["Achitecht", "Engineer", "Developer"].indexOf(data.userRole)) {
+      throw new Error('UserRole not set')
+    }
+    if (!data.finishDate || !this.isValidDate(data.finishDate)) {
+      data.finishDate = new Date(Date.now() + 12096e5) //Today + 14 days
+    } 
+    project.name = data.name
+    project.description = data.description
+    project.userRole = data.userRole
+    project.projectStatus = data.projectStatus
+    project.finishDate = new Date(data.finishDate)
+    console.log(project);
+
+    this.setDetailsPage(project)
+    return project
   }
 
   private setDetailsPage(project: Project) {
@@ -88,7 +119,7 @@ export class ProjectsManager {
     return this.list.find(project => project.id === id)
   }
 
-  getProjectByNames(name: string): Project[] {
+  getProjectsByName(name: string): Project[] {
     return this.list.filter(project => project.name === name)
   }
 

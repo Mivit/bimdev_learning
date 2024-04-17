@@ -25,7 +25,6 @@ const projectsPage = document.getElementById("projects-page")
 const detailsPage = document.getElementById("project-details")
 const userPage = document.getElementById("user-page")
 
-
 const newProjectBtn = document.getElementById('new-project-btn')
 if (newProjectBtn) {
   newProjectBtn.addEventListener('click', () => {showModal("new-project-modal", undefined)})  
@@ -37,8 +36,8 @@ if (newProjectBtn) {
 const projectForm = document.getElementById('new-project-form')
 if (projectForm && projectForm instanceof HTMLFormElement) {
   projectForm.addEventListener('submit', (event) => {
-    event.preventDefault();
-    const formData = new FormData(projectForm);
+    event.preventDefault()
+    const formData = new FormData(projectForm)
     const projectData: IProject = {
       name: formData.get('name') as string,
       description: formData.get('description') as string,
@@ -47,18 +46,73 @@ if (projectForm && projectForm instanceof HTMLFormElement) {
       finishDate: new Date(formData.get('finishDate') as string),
     }
     try {
-      const project = projectsManager.newProject(projectData)
-      projectForm.reset();
+      projectsManager.newProject(projectData)
+      projectForm.reset()
       // console.log(projectsManager.totalCost());
       closeModal("new-project-modal")        
     } catch (error) {
       alert(error)
     }
   })
-
 } else {
   console.warn('projectForm was not found');
 }
+
+// edit 
+const editProjectBtn = document.getElementById('edit-project-btn')
+const  editProjectName = detailsPage?.querySelector("[data-project-info='name']")
+if (editProjectBtn) {
+  editProjectBtn.addEventListener('click', () => {
+    showModal("edit-project-modal", undefined)
+
+      // console.log(editableFormData.get('name') as string);
+      const editForm = document.forms['edit-project-form']
+    
+      // get project data 
+      const project = projectsManager.getProjectsByName(editProjectName?.textContent)[0]
+      console.log(project);
+      
+      // instead of placehodlers
+      if (editForm && editForm instanceof HTMLFormElement) {
+        const formElement = document.forms['edit-project-form']
+        
+        // Set data
+        formElement.elements['name'].value = project.name
+        formElement.elements['description'].value = project.description
+        formElement.elements['userRole'].value = project.userRole
+        formElement.elements['status'].value = project.projectStatus
+        formElement.elements['finishDate'].value = project.finishDate.toLocaleDateString("sv-SE")
+  
+        // handle edited data
+        editForm.addEventListener('submit', (event) => {
+          event.preventDefault()
+          const editableFormData = new FormData(editForm)
+          const editedProjectData: IProject = {
+            name: editableFormData.get('name') as string,
+            description: editableFormData.get('description') as string,
+            userRole: editableFormData.get('userRole') as ProjectUserRole,
+            projectStatus: editableFormData.get('status') as ProjectStatus,
+            finishDate: new Date(editableFormData.get('finishDate') as string),
+          }
+          try {       
+            projectsManager.updateProject(editedProjectData, project.name)
+            editForm.reset()
+            closeModal("edit-project-modal")  
+                  
+
+          } catch (error) {
+            alert(error)
+          }
+        }) 
+      } else {
+        console.warn('editForm was not found');
+      }
+  })  
+} else {
+  console.warn('editProjectBtn was not found');
+}
+
+
 
 const exportProjectsBtn = document.getElementById("export-projects-btn")
 if (exportProjectsBtn) {
