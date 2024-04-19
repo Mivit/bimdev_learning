@@ -115,6 +115,14 @@ export class ProjectsManager {
 
   } 
 
+  private addTodoToProject(projectName: string, todoData: any) {
+    const project = this.getProjectsByName(projectName)[0]
+    console.log(project);
+    project.todos.push(todoData)
+    
+
+  }
+
   getProject(id: string): Project | undefined {
     return this.list.find(project => project.id === id)
   }
@@ -142,7 +150,10 @@ export class ProjectsManager {
   // TODOS
   getTodos() {}
 
-  addTodo() {}
+  addTodo(name, todoData) {
+    console.log('add todo', todoData);
+    this.addTodoToProject(name, todoData)
+  }
 
   exportToJSON(fileName: string = "projects") {
     const json = JSON.stringify(this.list, null, 2)

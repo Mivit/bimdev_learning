@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid'
 
 export type ProjectStatus = "Pending" | "Active" | "Finished"
+export type TodoStatus = "Pending" | "Ongoing" | "Finished"
 export type ProjectUserRole = "Architect" | "Engineer" | "Developer"
 
 export interface IProject {
@@ -24,12 +25,7 @@ export class Project implements IProject {
   cost: number = 1000
   progress: number = 0
   id: string
-  todos: [
-    {
-      title: string
-      dueDate: Date
-    }
-  ]
+  todos: [] = []
 
   constructor(data: IProject) {
     for (const key in data) {
