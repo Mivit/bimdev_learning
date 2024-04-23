@@ -59,9 +59,13 @@ export class ProjectsManager {
     if (data.description.length <3) {
       throw new Error(`Decscription is too short`)
     }
-    if (!["Pending", "Active", "Finished"].indexOf(data.projectStatus)) {
+    console.log(data.projectStatus);
+    
+    if (!["Pending", "Active", "Finished"].indexOf(data.projectStatus.toString())) {
       throw new Error('Status not set')
     }
+    console.log(data.userRole);
+    
     if (!["Achitecht", "Engineer", "Developer"].indexOf(data.userRole)) {
       throw new Error('UserRole not set')
     }
@@ -157,7 +161,7 @@ export class ProjectsManager {
 
   exportToJSON(fileName: string = "projects") {
     const json = JSON.stringify(this.list, null, 2)
-
+    console.log(json);
     const blob = new Blob([json], { type: 'application/json'})
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')

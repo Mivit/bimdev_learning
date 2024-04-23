@@ -16,8 +16,8 @@ export class Project implements IProject {
 	//To satisfy IProject
   name: string
 	description: string
-	projectStatus: "Pending" | "Active" | "Finished"
-	userRole: "Architect" | "Engineer" | "Developer"
+	projectStatus: ProjectStatus
+	userRole: ProjectUserRole
   finishDate: Date
   
   //Class internals
