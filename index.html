@@ -94,17 +94,17 @@
             <div class="form-field-container">
               <label for="project_role"><span class="material-icons-round">person</span>Role</label>
               <select id="project_role" name="userRole">
-                <option>Architect</option>
-                <option>Engineer</option>
-                <option>Developer</option>
+                <option id="Architect">Architect</option>
+                <option id="Engineer">Engineer</option>
+                <option id="Developer">Developer</option>
               </select>
             </div>
             <div class="form-field-container">
               <label for="project_status"><span class="material-icons-round">not_listed_location</span>Status</label>
               <select id="project_status" name="status">
-                <option>Pending</option>
-                <option>Active</option>
-                <option>Finished</option>
+                <option id="Pending">Pending</option>
+                <option id="Active">Active</option>
+                <option id="Finished">Finished</option>
               </select>
             </div>
             <div class="form-field-container">
@@ -137,9 +137,9 @@
             <div class="form-field-container">
               <label for="todo_status"><span class="material-icons-round">not_listed_location</span>Status</label>
               <select id="todo_status" name="status">
-                <option>Pending</option>
-                <option>Ongoing</option>
-                <option>Finished</option>
+                <option id="pending">Pending</option>
+                <option id="ongoing">Ongoing</option>
+                <option id="finished">Finished</option>
               </select>
             </div>
             <div class="form-field-container">
@@ -158,41 +158,41 @@
       </dialog>
       <header>
         <div>
-          <h2 data-project-info="name">Hospital Center</h2>
-          <p style="color: #969696" data-project-info="description">Community hospital location</p>
+          <h2 data-project-info="name"></h2>
+          <p style="color: #969696" data-project-info="description"></p>
         </div>
       </header>
       <div class="main-page-content">
         <div style="display: flex; flex-direction: column; row-gap: 30px;">
           <div class="dashboard-card" style="padding: 30px 0;">
             <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 30px; margin-bottom: 30px;">
-              <p id="round-abbr" style="font-size: 20px; aspect-ratio: 1; border-radius: 100%; padding: 12px; text-transform: uppercase;" data-project-info="abbr">HC</p>
+              <p id="round" class="round-abbr" data-project-info="abbr"></p>
               <button id="edit-project-btn" class="btn-secondary"><p style="width: 100%;">Edit</p></button>
             </div>
             <div style="padding-left: 30px;">
-              <h4 data-project-info="cardName">Hospital Center</h4>
-              <p data-project-info="cardDescription">Community hospital located at downtown</p>
+              <h4 data-project-info="cardName"></h4>
+              <p data-project-info="cardDescription"></p>
             </div>
             <div style="padding-left: 20px; display: grid; grid-template-columns:repeat(auto-fill, minmax(100px, 1fr)); margin: 10px;">
               <div>
                 <p style="color: #969696;">Status</p>
-                <p data-project-info="projectStatus">Active</p>
+                <p data-project-info="projectStatus"></p>
               </div>
               <div>
                 <p style="color: #969696;">Cost</p>
-                <p data-project-info="cost">$ 2'542.00</p>
+                <p data-project-info="cost"></p>
               </div>
               <div>
                 <p style="color: #969696;">Role</p>
-                <p data-project-info="userRole">Engineer</p>
+                <p data-project-info="userRole"></p>
               </div>
               <div>
                 <p style="color: #969696;">Finish Date</p>
-                <p data-project-info="finishDate">2023-05-01</p>
+                <p data-project-info="finishDate"></p>
               </div>
             </div>
             <div style="background-color: #969696; border-radius: 10px; margin: 30px;">
-              <div style="height: 20px; width: 80%; background-color: green; border-radius: 10px 0 0 10px; text-align: center;">80%</div>
+              <div style="height: 20px; width: 80%; background-color: green; border-radius: 10px 0 0 10px; text-align: center;" data-project-info="progress"></div>
             </div>
           </div>
           <div class="dashboard-card" style="flex-grow: 1;">
@@ -205,7 +205,7 @@
               </div>
             </div> 
             <div style="padding: 0 20px 10px 20px;">
-              <!-- <div class="todo-item todo-warning" style="display: flex; justify-content: space-between; align-items: center;">
+              <div class="todo-item todo-warning" style="display: flex; justify-content: space-between; align-items: center;">
                 <div style="display: flex; align-items: center; justify-content: space-between;">
                   <div style="display: flex;  align-items: center; border-radius: 5px; padding: 10px; background-color: #969696;">
                     <span class="material-icons-round">
@@ -237,7 +237,7 @@
                   <p style="margin: 10px">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
                 </div>
                 <p class="todo-date">Fri, 20 sep</p>
-              </div> -->
+              </div>
             </div>
           </div>
         </div>

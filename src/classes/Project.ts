@@ -39,14 +39,17 @@ export class Project implements IProject {
   }
 
   setUI() {
-    if (this.ui && Object.keys(this.ui).length !== 0 ) {return}
+    if (this.ui && Object.keys(this.ui).length !== 0 ) {
+      console.log('UI already set');
     
+      return
+    }
     this.ui = document.createElement("div")
     this.ui.className = "project-card"
     this.ui.innerHTML = `
     <div class="card-header">
       <div style="display: flex; flex-direction: row">
-        <p id="round-abbr" style="font-size: 20px; aspect-ratio: 1; border-radius: 100%; padding: 12px; text-transform: uppercase;">HC</p>
+        <p id="round" class="round-abbr">${this.name}</p>
         <div style="align-content: bottom; padding: 0 0 0 10px">
           <h5>${this.name}</h5>
           <p>${this.description}</p>
@@ -71,5 +74,9 @@ export class Project implements IProject {
         <p>${this.progress * 100}%</p>
       </div>
     </div>`
+  }
+
+  removeUI() {
+    this.ui.remove()
   }
 }

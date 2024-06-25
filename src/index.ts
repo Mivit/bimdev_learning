@@ -19,8 +19,6 @@ function closeModal(id: string) {
   }
 }
 
-
-
 const projectsListUI = document.getElementById('projects-list') as HTMLElement;
 const projectsManager = new ProjectsManager(projectsListUI);
 const projectsPage = document.getElementById("projects-page")
@@ -80,7 +78,7 @@ if (editProjectBtn) {
   
     // get project data 
     const editProjectName = detailsPage?.querySelector("[data-project-info='name']")
-    const project = projectsManager.getProjectsByName(editProjectName?.textContent)[0]
+    const project = projectsManager.getProjectsByName(editProjectName?.textContent ?? '')[0];
     // console.log(project);
     
     // instead of placehodlers
@@ -91,7 +89,16 @@ if (editProjectBtn) {
       formElement.elements['name'].value = project.name
       formElement.elements['description'].value = project.description
       formElement.elements['userRole'].value = project.userRole
+      // set form attribute to corresponing optin to selected
+
+      const userRoleForm = formElement.elements['userRole'] as HTMLSelectElement
+      userRoleForm.options.namedItem(project.userRole)?.setAttribute('selected', 'selected')
+
       formElement.elements['status'].value = project.projectStatus
+      // set form attribute to corresponing optin to selected
+      const statusForm = formElement.elements['status'] as HTMLSelectElement
+      statusForm.options.namedItem(project.projectStatus)?.setAttribute('selected', 'selected')
+
       formElement.elements['finishDate'].value = project.finishDate.toLocaleDateString("sv-SE")
 
       // handle edited data
@@ -105,8 +112,14 @@ if (editProjectBtn) {
           projectStatus: editableFormData.get('status') as ProjectStatus,
           finishDate: new Date(editableFormData.get('finishDate') as string),
         }
+        // project.removeUI()
+
         try {       
+          // console.log(editedProjectData, project.name);
+          // update project UI
+
           projectsManager.updateProject(editedProjectData, project.name)
+          project.setUI()
           editForm.reset()
           closeModal("edit-project-modal")  
 
@@ -118,7 +131,7 @@ if (editProjectBtn) {
         console.warn('editForm was not found');
       }
       editForm.addEventListener('reset', () => {
-        console.log('cancel');
+        // console.log('cancel');
 
         editForm.reset()
         closeModal('edit-project-modal')

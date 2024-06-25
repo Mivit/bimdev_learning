@@ -128,8 +128,22 @@ header {
   justify-content: space-between;
 }
 
-#round-abbr{
+#round {
   background-color: var(--random-color);
+  aspect-ratio: 1;
+  border-radius: 100%;
+}
+
+.round-abbr{
+  display: inline-block;
+  width: 38px;
+  overflow: hidden;
+  word-break: break-all;
+  line-height: 40px;
+  height: 40px;
+  font-size: 20px; 
+  text-transform: uppercase;
+  padding: 6px 0 6px 12px;
 }
 
 .project-card {

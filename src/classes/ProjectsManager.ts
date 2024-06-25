@@ -14,12 +14,14 @@ export class ProjectsManager {
       description: "This is just a default app project",
       projectStatus: "Pending",
       userRole: "Architect",
-      finishDate: new Date()
+      finishDate: new Date(),
     })
   }
-
+  
   newProject(data: IProject): Project {
     const projectNames = this.list.map((project) => {
+      console.log(project.id);
+      
       return project.name
     })
     const nameInUse = projectNames.includes(data.name)
@@ -48,28 +50,25 @@ export class ProjectsManager {
     return newProject
   }
 
-  updateProject(data: IProject, name: string): Project {
-    const project = this.getProjectsByName(name)[0]
-    // Set updated values 
-    console.log(data.name.length);
+  updateProject(data: IProject, id: string): Project {
+    const project = this.getProjectsByName(id)[0]
+    if (!project) {
+      throw new Error(`Project with id: "${id}" not found`)
+    }
     
-    if (data.name.length <5) {
+    if (data.name && data.name.length < 5) {
       throw new Error(`Project name: "${data.name}" is too short`)
     }
-    if (data.description.length <3) {
-      throw new Error(`Decscription is too short`)
+    if (data.description && data.description.length < 3) {
+      throw new Error(`Description is too short`)
     }
-    console.log(data.projectStatus);
-    
-    if (!["Pending", "Active", "Finished"].indexOf(data.projectStatus.toString())) {
+    if (!["Pending", "Active", "Finished"].includes(data.projectStatus.toString())) {
       throw new Error('Status not set')
     }
-    console.log(data.userRole);
-    
-    if (!["Achitecht", "Engineer", "Developer"].indexOf(data.userRole)) {
+    if (!["Architect", "Engineer", "Developer"].includes(data.userRole)) {
       throw new Error('UserRole not set')
     }
-    if (!data.finishDate || !this.isValidDate(data.finishDate)) {
+    if (!data.finishDate || !this.isValidDate(new Date(data.finishDate))) {
       data.finishDate = new Date(Date.now() + 12096e5) //Today + 14 days
     } 
     project.name = data.name
@@ -77,54 +76,55 @@ export class ProjectsManager {
     project.userRole = data.userRole
     project.projectStatus = data.projectStatus
     project.finishDate = new Date(data.finishDate)
-    console.log(project);
 
     this.setDetailsPage(project)
+    this.updateProjectInList(project.id)
     return project
   }
 
   private setDetailsPage(project: Project) {
     const detailsPage = document.getElementById("project-details")
     if (!detailsPage) { return }
-    const name = detailsPage.querySelector("[data-project-info='name']")
-    if (name) {name.textContent = project.name }
-    const desc = detailsPage.querySelector("[data-project-info='description']")
-    if (desc) {desc.textContent = project.description }
-    
-    // CARD
-    const abbr = detailsPage.querySelector("[data-project-info='abbr']")
-    if (abbr) {abbr.textContent = project.name.slice(0, 2)}
-    const cardName = detailsPage.querySelector("[data-project-info='cardName']")
-    if (cardName) {cardName.textContent = project.name }
-    const cardDescription = detailsPage.querySelector("[data-project-info='cardDescription']")
-    if (cardDescription) {cardDescription.textContent = project.description }
-    const projectStatus = detailsPage.querySelector("[data-project-info='projectStatus']")
-    if (projectStatus) {projectStatus.textContent = project.projectStatus }
-    const cost = detailsPage.querySelector("[data-project-info='cost']")
-    if (cost) {cost.textContent = '$ ' + project.cost.toString()}
-    const userRole = detailsPage.querySelector("[data-project-info='userRole']")
-    if (userRole) {userRole.textContent = project.userRole }
-    const finishDate = detailsPage.querySelector("[data-project-info='finishDate']")
-    if (finishDate) {
-      if(project.finishDate) {
-        finishDate.textContent = project.finishDate.toLocaleDateString("sv-SE") 
-      } else {
-        const today = Date.now();
 
-        finishDate.textContent = Date.now().toLocaleString("sv-SE") 
+    for (const key in project) {
+
+      const HTMLElements = detailsPage.querySelectorAll(`[data-project-info=${key}]`)
+      if (HTMLElements) {
+        if (key === "finishDate") {
+          HTMLElements[0].textContent = project.finishDate.toLocaleDateString('sv-SE');
+        } else if (key === "id") {
+          // this.updateProjectInList(project.id);          
+        } else if (key === "progress") {
+          const progress = HTMLElements[0] as HTMLElement;
+          progress.style.width = project.progress + "%";
+          progress.textContent = project.progress.toString() + "%";
+        } else {
+          for (const element of HTMLElements) {
+            console.log(key, project[key]);
+            
+            element.textContent = project[key]
+          }
+        }
+        const abbr = detailsPage.querySelector("[data-project-info='abbr']")
+        if (abbr) {abbr.textContent = project.name.slice(0, 2)}
       }
     }
+  }
 
-    //Load TODOs
+  private updateProjectInList(id: string) {
+    // const project = this.getProject(id)
+    // if (!project) { return }
+    // const projectIndex = this.list.findIndex((project) => project.id === id)
+    // this.list[projectIndex] = project
+    // this.list[projectIndex].setUI()
+    // // console.log(this.list[projectIndex]);
 
-  } 
-
-  private addTodoToProject(projectName: string, todoData: any) {
+  }
+  
+  private addTodoToProject(id: string, todoData: any) {
     const project = this.getProjectsByName(projectName)[0]
-    console.log(project);
+    // console.log(project);
     project.todos.push(todoData)
-    
-
   }
 
   getProject(id: string): Project | undefined {
@@ -142,6 +142,8 @@ export class ProjectsManager {
     const remainingProjects = this.list.filter(project => project.id !== id)
     this.list = remainingProjects
   }
+
+
 
   totalCost(): number {
     return this.list.reduce((total, project) => total + project.cost, 0)
