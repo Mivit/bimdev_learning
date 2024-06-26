@@ -7,7 +7,7 @@ function showModal(id: string, data: any) {
   if (modal && modal instanceof HTMLDialogElement) {
     modal.showModal()
   } else {
-    console.warn(`Modal with id ${id} was not found`);
+    console.warn(`Modal with id ${id} was not found`)
   }
 }
 
@@ -22,8 +22,8 @@ function closeModal(id: string) {
 }
 
 // Initializing project manager and DOM elements
-const projectsListUI = document.getElementById('projects-list') as HTMLElement;
-const projectsManager = new ProjectsManager(projectsListUI);
+const projectsListUI = document.getElementById('projects-list') as HTMLElement
+const projectsManager = new ProjectsManager(projectsListUI)
 const projectsPage = document.getElementById("projects-page")
 const detailsPage = document.getElementById("project-details")
 const userPage = document.getElementById("user-page")
@@ -31,7 +31,7 @@ const userPage = document.getElementById("user-page")
 // Add Event Listener to new project button
 const newProjectBtn = document.getElementById('new-project-btn')
 if (newProjectBtn) {
-  const handleClick = () => { showModal("new-project-modal", undefined); }
+  const handleClick = () => { showModal("new-project-modal", undefined) }
   newProjectBtn.removeEventListener('click', handleClick)
   newProjectBtn.addEventListener('click', handleClick)
 } else {
@@ -50,7 +50,7 @@ if (projectForm && projectForm instanceof HTMLFormElement) {
       userRole: formData.get('userRole') as ProjectUserRole,
       projectStatus: formData.get('status') as ProjectStatus,
       finishDate: new Date(formData.get('finishDate') as string),
-    };
+    }
     try {
       const project = projectsManager.newProject(projectData)
       projectForm.reset()
@@ -58,12 +58,12 @@ if (projectForm && projectForm instanceof HTMLFormElement) {
     } catch (error) {
       alert(error)
     }
-  };
+  }
 
   const handleReset = () => {
     projectForm.reset()
     closeModal('new-project-modal')
-  };
+  }
 
   projectForm.removeEventListener('submit', handleSubmit)
   projectForm.addEventListener('submit', handleSubmit)
@@ -77,7 +77,7 @@ if (projectForm && projectForm instanceof HTMLFormElement) {
 // Edit project through details page modal
 const editProjectBtn = document.getElementById('edit-project-btn')
 if (editProjectBtn) {
-  const handleClick = (event) => {
+  const handleClick = () => {
     showModal("edit-project-modal", undefined)
 
     const editForm = document.forms['edit-project-form']
@@ -94,7 +94,7 @@ if (editProjectBtn) {
     editForm.elements['name'].value = project.name
     editForm.elements['description'].value = project.description
     editForm.elements['userRole'].value = project.userRole
-    
+
     const userRoleForm = editForm.elements['userRole'] as HTMLSelectElement
     userRoleForm.options.namedItem(project.userRole)?.setAttribute('selected', 'selected')
 
@@ -129,13 +129,13 @@ if (editProjectBtn) {
       closeModal('edit-project-modal')
     }
 
+    // Ensure the event listener is only added once
     editForm.removeEventListener('submit', handleSubmit)
-    editForm.addEventListener('submit', handleSubmit)
+    editForm.addEventListener('submit', handleSubmit, { once: true }) // Add event listener only once
 
     editForm.removeEventListener('reset', handleReset)
-    editForm.addEventListener('reset', handleReset)
+    editForm.addEventListener('reset', handleReset, { once: true }) // Add event listener only once
   }
-
   editProjectBtn.removeEventListener('click', handleClick)
   editProjectBtn.addEventListener('click', handleClick)
 
@@ -146,7 +146,7 @@ if (editProjectBtn) {
 // Add Todo Button Event Listener
 const addTodoBtn = document.getElementById("add-todo")
 if (addTodoBtn) {
-  addTodoBtn.addEventListener("click", () => {
+  const handleClick = () => {
     showModal("new-todo-modal", undefined)
 
     const projectName = detailsPage?.querySelector("[data-project-info='name']")?.textContent
@@ -169,19 +169,22 @@ if (addTodoBtn) {
       } catch (error) {
         alert(error)
       }
-    };
+    }
 
     const handleTodoReset = () => {
       newTodoForm.reset()
       closeModal('new-todo-modal')
-    };
+    }
 
     newTodoForm.removeEventListener('submit', handleTodoSubmit)
-    newTodoForm.addEventListener('submit', handleTodoSubmit)
+    newTodoForm.addEventListener('submit', handleTodoSubmit, { once: true }) // Add event listener only once
 
     newTodoForm.removeEventListener('reset', handleTodoReset)
-    newTodoForm.addEventListener('reset', handleTodoReset)
-  })
+    newTodoForm.addEventListener('reset', handleTodoReset, { once: true }) // Add event listener only once
+  }
+  addTodoBtn.removeEventListener('click', handleClick)
+  addTodoBtn.addEventListener('click', handleClick)
+
 } else {
   console.warn('addTodoBtn was not found')
 }
