@@ -19,11 +19,10 @@ export class ProjectsManager {
   }
   
   newProject(data: IProject): Project {
-    const projectNames = this.list.map((project) => {
-      console.log(project.id);
-      
+    const projectNames = this.list.map((project) => {      
       return project.name
     })
+
     const nameInUse = projectNames.includes(data.name)
     if (nameInUse) {
       throw new Error(`A project with the name "${data.name}" is already in use`)
@@ -45,13 +44,15 @@ export class ProjectsManager {
       detailsPage.style.display = "flex"
       this.setDetailsPage(newProject)
     })
-    this.ui.appendChild(newProject.ui)
+    this.ui.append(newProject.ui)
     this.list.push(newProject)
     return newProject
   }
 
-  updateProject(data: IProject, id: string): Project {
-    const project = this.getProjectsByName(id)[0]
+  async updateProject(data: IProject, id: string): Promise<Project> {
+    console.log(data, id);
+    
+    const project = await this.getProject(id)
     if (!project) {
       throw new Error(`Project with id: "${id}" not found`)
     }
@@ -78,7 +79,6 @@ export class ProjectsManager {
     project.finishDate = new Date(data.finishDate)
 
     this.setDetailsPage(project)
-    this.updateProjectInList(project.id)
     return project
   }
 
@@ -87,44 +87,29 @@ export class ProjectsManager {
     if (!detailsPage) { return }
 
     for (const key in project) {
-
       const HTMLElements = detailsPage.querySelectorAll(`[data-project-info=${key}]`)
       if (HTMLElements) {
         if (key === "finishDate") {
           HTMLElements[0].textContent = project.finishDate.toLocaleDateString('sv-SE');
-        } else if (key === "id") {
-          // this.updateProjectInList(project.id);          
         } else if (key === "progress") {
           const progress = HTMLElements[0] as HTMLElement;
           progress.style.width = project.progress + "%";
           progress.textContent = project.progress.toString() + "%";
         } else {
-          for (const element of HTMLElements) {
-            console.log(key, project[key]);
-            
+          for (const element of HTMLElements) {  
             element.textContent = project[key]
           }
         }
-        const abbr = detailsPage.querySelector("[data-project-info='abbr']")
-        if (abbr) {abbr.textContent = project.name.slice(0, 2)}
+        // const abbr = detailsPage.querySelector("[data-project-info='abbr']")
+        // if (abbr) {abbr.textContent = project.name.slice(0, 2)}
       }
     }
   }
-
-  private updateProjectInList(id: string) {
-    // const project = this.getProject(id)
-    // if (!project) { return }
-    // const projectIndex = this.list.findIndex((project) => project.id === id)
-    // this.list[projectIndex] = project
-    // this.list[projectIndex].setUI()
-    // // console.log(this.list[projectIndex]);
-
-  }
   
-  private addTodoToProject(id: string, todoData: any) {
-    const project = this.getProjectsByName(projectName)[0]
+  private async addTodoToProject(id: string, todoData: any) {
+    const project = await this.getProject(id)
     // console.log(project);
-    project.todos.push(todoData)
+    await project?.todos.push(todoData)
   }
 
   getProject(id: string): Project | undefined {
@@ -142,8 +127,6 @@ export class ProjectsManager {
     const remainingProjects = this.list.filter(project => project.id !== id)
     this.list = remainingProjects
   }
-
-
 
   totalCost(): number {
     return this.list.reduce((total, project) => total + project.cost, 0)
