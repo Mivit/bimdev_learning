@@ -306,9 +306,9 @@ input:focus, textarea:focus, select:focus {
   cursor: pointer;
 }
 
-/* .todo-item:hover {
+.todo-item:hover {
   background-color: var(--primary);
-} */
+}
 
 .todo-date {
   min-width: fit-content;
