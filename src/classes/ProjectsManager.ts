@@ -6,6 +6,7 @@ const  availableColors = ["#ca8134", "#55ad99", "#a55d93", "#ad99b9", "#ad2133",
 export class ProjectsManager {
   list: Project[] = []
   ui: HTMLElement
+  todoUI: HTMLElement
 
   constructor(container: HTMLElement) {
     this.ui = container
@@ -15,6 +16,14 @@ export class ProjectsManager {
       projectStatus: "Pending",
       userRole: "Architect",
       finishDate: new Date(),
+      todos: [
+        {
+          title: "Default Todo",
+          description: "This is just a default todo",
+          status: "Finished",
+          dueDate: new Date()
+        }
+      ]
     })
   }
   
@@ -43,16 +52,17 @@ export class ProjectsManager {
       projectsPage.style.display = "none"
       detailsPage.style.display = "flex"
       this.setDetailsPage(newProject)
+      // console.log('newProject', newProject.todos);
+      
     })
+    // append the new project to the projects list in the UI and our list
     this.ui.append(newProject.ui)
-    this.list.push(newProject)
+    this.list.push(newProject)   
     return newProject
   }
 
-  async updateProject(data: IProject, id: string): Promise<Project> {
-    console.log(data, id);
-    
-    const project = await this.getProject(id)
+  updateProject(data: IProject, id: string): Project {
+    const project = this.getProject(id)
     if (!project) {
       throw new Error(`Project with id: "${id}" not found`)
     }
@@ -79,11 +89,13 @@ export class ProjectsManager {
     project.finishDate = new Date(data.finishDate)
 
     this.setDetailsPage(project)
+    this.setProjectsPage(project)
     return project
   }
 
   private setDetailsPage(project: Project) {
     const detailsPage = document.getElementById("project-details")
+    const todosContainer = document.getElementById("todo-container")
     if (!detailsPage) { return }
 
     for (const key in project) {
@@ -99,17 +111,100 @@ export class ProjectsManager {
           for (const element of HTMLElements) {  
             element.textContent = project[key]
           }
+        }        
+      }
+    }
+    if (!todosContainer) { return }
+    const todoElement = document.createElement("div")
+    if (project.todos.length < 1) {
+      todoElement.textContent = "No todos"
+      todosContainer.append(todoElement)
+      return
+    } else  {
+      todosContainer.innerHTML = ""
+      for (const todo of project.todos) {
+        const todoElement = document.createElement("div")
+        todoElement.className = "todo-item"
+        todoElement.style.display = "flex"
+        todoElement.style.justifyContent = "space-between"
+        todoElement.style.alignItems = "center"
+        todoElement.innerHTML = `
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div style="display: flex;  align-items: center; border-radius: 5px; padding: 10px; background-color: #969696;">
+                <span class="material-icons-round">
+                  construction
+                  </span>
+              </div>
+              <div style="padding: 0 10px;">
+                <h5 id="todo_title">${todo.title}</h5>
+                <p id="todo_description">${todo.description}</p>
+                <p id="todo_status" style="padding: 10px 0 0 0;">${todo.status}</p>
+              </div>
+            </div>
+            <p class="todo-date">Fri, 20 sep</p>
+        `
+        switch (todo.status) {
+          case "Pending":
+            todoElement.className = "todo-item alert"
+
+            break;
+          case "Ongoing":
+            todoElement.className = "todo-item warning"
+            break;
+          case "Finished":
+            todoElement.className = "todo-item ok"
+            break;
         }
-        // const abbr = detailsPage.querySelector("[data-project-info='abbr']")
-        // if (abbr) {abbr.textContent = project.name.slice(0, 2)}
+
+        todosContainer.append(todoElement)
+
+        todoElement.addEventListener("click", () => {
+          const todoStatus = todoElement.getElementsByTagName("p")[1]
+          
+          switch (todo.status) {  
+            case "Pending":
+              todoElement.className = "todo-item warning";
+              todo.status = "Ongoing";
+              todoStatus.textContent = "Ongoing"
+              break;
+            case "Ongoing":
+              todoElement.className = "todo-item ok"
+              todo.status = "Finished"
+              todoStatus.textContent = "Finished"
+              break;
+            case "Finished":
+              todoElement.className = "todo-item alert"
+              todo.status = "Pending"
+              todoStatus.textContent = "Pending"
+              break;
+          }
+        })
       }
     }
   }
+
+  private setProjectsPage(project: Project) {
+    // console.log('setProjectsPage', project);
+    project.ui.getElementsByTagName("h5")[0].textContent = project.name
+    project.ui.getElementsByTagName("p")[1].textContent = project.description    
+    project.ui.getElementsByTagName("p")[3].textContent = project.projectStatus    
+    project.ui.getElementsByTagName("p")[5].textContent = project.userRole    
+  }
   
-  private async addTodoToProject(id: string, todoData: any) {
-    const project = await this.getProject(id)
-    // console.log(project);
-    await project?.todos.push(todoData)
+  private addTodo(name: string, todoData: any) {
+    const project = this.getProjectsByName(name)[0]
+    if (project) {
+      console.log('Current Todos:', project.todos);
+      
+      if (!todoData.dueDate || !this.isValidDate(todoData.dueDate)) {
+        todoData.dueDate = new Date(Date.now() + 12096e5) //Today + 14 days
+      } 
+      project.addTodo(todoData)
+      this.setDetailsPage(project)
+
+    } else {
+      throw new Error(`Project with id: "${name}" not found`)
+    }    
   }
 
   getProject(id: string): Project | undefined {
@@ -134,14 +229,6 @@ export class ProjectsManager {
 
   isValidDate(d: any) {
     return d instanceof Date && !isNaN(d)
-  }
-
-  // TODOS
-  getTodos() {}
-
-  addTodo(name, todoData) {
-    console.log('add todo', todoData);
-    this.addTodoToProject(name, todoData)
   }
 
   exportToJSON(fileName: string = "projects") {

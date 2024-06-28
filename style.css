@@ -306,22 +306,22 @@ input:focus, textarea:focus, select:focus {
   cursor: pointer;
 }
 
-.todo-item:hover {
+/* .todo-item:hover {
   background-color: var(--primary);
-}
+} */
 
 .todo-date {
   min-width: fit-content;
 }
 
-.todo-ok {
+.ok {
   background-color: var(--status-ok);
 }
 
-.todo-warning {
+.warning {
   background-color: var(--status-warning);
 }
 
-.todo-alert {
+.alert {
   background-color: var(--status-alert);
 }

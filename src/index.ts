@@ -156,7 +156,7 @@ if (addTodoBtn) {
       event.preventDefault()
       const todoFormData = new FormData(newTodoForm)
       const todoData = {
-        name: todoFormData.get('title') as string,
+        ttile: todoFormData.get('title') as string,
         description: todoFormData.get('description') as string,
         status: todoFormData.get('status') as TodoStatus,
         dueDate: new Date(todoFormData.get('dueDate') as string),
@@ -188,6 +188,9 @@ if (addTodoBtn) {
 } else {
   console.warn('addTodoBtn was not found')
 }
+
+
+
 
 // Export and import projects buttons
 const exportProjectsBtn = document.getElementById("export-projects-btn")

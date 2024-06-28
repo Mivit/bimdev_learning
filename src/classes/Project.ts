@@ -22,6 +22,7 @@ export class Project implements IProject {
   
   //Class internals
   ui: HTMLDivElement
+  todoUi: HTMLDivElement
   cost: number = 1000
   progress: number = 0
   id: string
@@ -33,9 +34,6 @@ export class Project implements IProject {
     }
     this.id = uuidv4()
     this.setUI()
-    // if (!data['finishDate']) {
-    //   this['finishDate'] = data['finishDate']
-    // }
   }
 
   setUI() {
@@ -76,7 +74,10 @@ export class Project implements IProject {
     </div>`
   }
 
-  removeUI() {
-    this.ui.remove()
+  addTodo(todo: any) {
+    todo.id = uuidv4()
+    this.todos.push(todo)
+    console.log(this.todos);
+    
   }
 }

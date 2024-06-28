@@ -197,49 +197,20 @@
           </div>
           <div class="dashboard-card" style="flex-grow: 1;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <h2 style="padding-left: 30px;">To-do</h2>
+              <div>
+                <h2 style="padding-left: 30px;">To-do</h2>
+                <h5 style="padding-right: 30px;">Click todo to change status</h5>
+              </div>
               <div style="margin: 10px; display: flex; justify-content: space-between; align-items: center;">
                 <span class="material-icons-round" style="margin-right: 10px;">search</span>
                 <input type="text" placeholder="Search To-Do's by name" style="height: 12px; margin: 10px 0;">
                 <span id="add-todo" class="material-icons-round" style="margin-left: 10px;">add</span>
               </div>
             </div> 
-            <div style="padding: 0 20px 10px 20px;">
-              <div class="todo-item todo-warning" style="display: flex; justify-content: space-between; align-items: center;">
-                <div style="display: flex; align-items: center; justify-content: space-between;">
-                  <div style="display: flex;  align-items: center; border-radius: 5px; padding: 10px; background-color: #969696;">
-                    <span class="material-icons-round">
-                      construction
-                      </span>
-                  </div>
-                  <p style="margin: 10px">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-                </div>
-                <p class="todo-date">2024-04-12</p>
-              </div>
-              <div class="todo-item todo-alert" style="display: flex; justify-content: space-between; align-items: center;">
-                <div style="display: flex; align-items: center; justify-content: space-between;">
-                  <div style="display: flex;  align-items: center; border-radius: 5px; padding: 10px; background-color: #969696;">
-                    <span class="material-icons-round">
-                      construction
-                      </span>
-                  </div>
-                  <p style="margin: 10px">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-                </div>
-                <p class="todo-date">Fri, 20 sep</p>
-              </div>
-              <div class="todo-item todo-ok" style="display: flex; justify-content: space-between; align-items: center;">
-                <div style="display: flex; align-items: center; justify-content: space-between;">
-                  <div style="display: flex;  align-items: center; border-radius: 5px; padding: 10px; background-color: #969696;">
-                    <span class="material-icons-round">
-                      construction
-                      </span>
-                  </div>
-                  <p style="margin: 10px">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-                </div>
-                <p class="todo-date">Fri, 20 sep</p>
-              </div>
+            <div id="todo-container" style="padding: 0 20px 10px 20px;">
+
             </div>
-          </div>
+          </div> 
         </div>
         <div id="viewer-container" class="dashboard-card"></div>
       </div>
