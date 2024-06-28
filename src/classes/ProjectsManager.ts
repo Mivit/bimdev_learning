@@ -191,7 +191,7 @@ export class ProjectsManager {
     project.ui.getElementsByTagName("p")[5].textContent = project.userRole    
   }
   
-  private addTodo(name: string, todoData: any) {
+  addTodo(name: string, todoData: any) {
     const project = this.getProjectsByName(name)[0]
     if (project) {
       console.log('Current Todos:', project.todos);
@@ -254,9 +254,10 @@ export class ProjectsManager {
       const projects: IProject[] = JSON.parse(json as string)
       for (const project of projects) {
         try {
-          this.newProject(project)
-          // console.log(project);
-          
+          if (this.list.find(p => p.id=== project.id)) {
+            this.updateProject(project, project.id)
+          } 
+            this.newProject(project)          
         } catch (error) {
           // console.log(error);
           

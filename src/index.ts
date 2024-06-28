@@ -156,7 +156,7 @@ if (addTodoBtn) {
       event.preventDefault()
       const todoFormData = new FormData(newTodoForm)
       const todoData = {
-        ttile: todoFormData.get('title') as string,
+        title: todoFormData.get('title') as string,
         description: todoFormData.get('description') as string,
         status: todoFormData.get('status') as TodoStatus,
         dueDate: new Date(todoFormData.get('dueDate') as string),
