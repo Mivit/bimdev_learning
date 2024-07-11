@@ -10,21 +10,14 @@ export class ProjectsManager {
 
   constructor(container: HTMLElement) {
     this.ui = container
-    this.newProject({
+    const project = this.newProject({
       name: "Default Project",
       description: "This is just a default app project",
       projectStatus: "Pending",
       userRole: "Architect",
-      finishDate: new Date(),
-      todos: [
-        {
-          title: "Default Todo",
-          description: "This is just a default todo",
-          status: "Finished",
-          dueDate: new Date()
-        }
-      ]
+      finishDate: new Date()
     })
+    project.ui.click()
   }
   
   newProject(data: IProject): Project {

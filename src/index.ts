@@ -1,3 +1,4 @@
+import * as THREE from "three"
 import { IProject, ProjectStatus, TodoStatus, ProjectUserRole } from "./classes/Project"
 import { ProjectsManager } from "./classes/ProjectsManager"
 
@@ -239,3 +240,28 @@ projectBtn?.addEventListener("click", () => {
 usersBtn?.addEventListener("click", () => {
   switchPage('users')
 })
+
+
+// Three.js viewer
+const scene = new THREE.Scene()
+
+const viewerConstainer = document.getElementById("viewer-container") as HTMLElement
+const containerDimensions = viewerConstainer.getBoundingClientRect()
+const aspectRatio = containerDimensions.width / containerDimensions.height
+const camera = new THREE.PerspectiveCamera(75, aspectRatio)
+camera.position.z = 5
+
+const renderer = new THREE.WebGLRenderer()
+viewerConstainer.appendChild(renderer.domElement)
+renderer.setSize(containerDimensions.width, containerDimensions.height)
+
+const boxGeometry = new THREE.BoxGeometry()
+const material = new THREE.MeshStandardMaterial()
+const cube = new THREE.Mesh(boxGeometry, material)
+
+const directionallight = new THREE.DirectionalLight()
+const ambientlight = new THREE.AmbientLight()
+
+scene.add(cube, directionallight, ambientlight)
+
+renderer.render(scene, camera)
