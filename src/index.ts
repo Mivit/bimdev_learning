@@ -1,4 +1,5 @@
 import * as THREE from "three"
+import * as OBC from "openbim-components"
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min"
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
 import { IProject, ProjectStatus, TodoStatus, ProjectUserRole } from "./classes/Project"
@@ -244,68 +245,90 @@ usersBtn?.addEventListener("click", () => {
 })
 
 
-// Three.js viewer
-const scene = new THREE.Scene()
+// // Three.js viewer
+// const scene = new THREE.Scene()
 
-const viewerContainer = document.getElementById("viewer-container") as HTMLElement
-const camera = new THREE.PerspectiveCamera(75)
-camera.position.z = 5
+// const viewerContainer = document.getElementById("viewer-container") as HTMLElement
+// const camera = new THREE.PerspectiveCamera(75)
+// camera.position.z = 5
 
-const renderer = new THREE.WebGLRenderer({alpha: true, antialias: true})
-viewerContainer.appendChild(renderer.domElement)
+// const renderer = new THREE.WebGLRenderer({alpha: true, antialias: true})
+// viewerContainer.appendChild(renderer.domElement)
 
-function resizeViewer () {
-  const containerDimensions = viewerContainer.getBoundingClientRect()
-  renderer.setSize(containerDimensions.width, containerDimensions.height)
-  const aspectRatio = containerDimensions.width / containerDimensions.height
-  camera.aspect = aspectRatio
-  camera.updateProjectionMatrix()
-}
+// function resizeViewer () {
+//   const containerDimensions = viewerContainer.getBoundingClientRect()
+//   renderer.setSize(containerDimensions.width, containerDimensions.height)
+//   const aspectRatio = containerDimensions.width / containerDimensions.height
+//   camera.aspect = aspectRatio
+//   camera.updateProjectionMatrix()
+// }
 
-window.addEventListener("resize", resizeViewer)
+// window.addEventListener("resize", resizeViewer)
 
-resizeViewer()
+// resizeViewer()
 
 const boxGeometry = new THREE.BoxGeometry()
 const material = new THREE.MeshStandardMaterial()
 const cube = new THREE.Mesh(boxGeometry, material)
 
-const directionallight = new THREE.DirectionalLight()
-const ambientlight = new THREE.AmbientLight()
-ambientlight.intensity = 0.4
+// const directionallight = new THREE.DirectionalLight()
+// const ambientlight = new THREE.AmbientLight()
+// const light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1)
+// ambientlight.intensity = 0.9
 
-scene.add(cube, directionallight, ambientlight)
+// // scene.add(cube, directionallight, ambientlight)
+// scene.add(directionallight, ambientlight, light)
 
-const controls = new OrbitControls(camera, viewerContainer)
+// const controls = new OrbitControls(camera, viewerContainer)
 
-renderer.render(scene, camera)
+// renderer.render(scene, camera)
 
-function renderScene () {
-  renderer.render(scene, camera)
-  requestAnimationFrame(renderScene)
-}
+// function renderScene () {
+//   renderer.render(scene, camera)
+//   requestAnimationFrame(renderScene)
+// }
 
-renderScene()
+// renderScene()
 
-const axes = new THREE.AxesHelper()
-const grid = new THREE.GridHelper(10, 10)
-grid.material.transparent = true
-grid.material.opacity = 0.4
-grid.material.color = new THREE.Color("#808080") 
+// const axes = new THREE.AxesHelper()
+// const grid = new THREE.GridHelper(10, 10)
+// grid.material.transparent = true
+// grid.material.opacity = 0.4
+// grid.material.color = new THREE.Color("#808080") 
 
-scene.add(axes, grid)
+// scene.add(axes, grid)
 
-const gui = new GUI()
+// const gui = new GUI()
 
-const cubeControls = gui.addFolder("Cube")
-cubeControls.add(cube.position, "x", -10, 10, .5)
-cubeControls.add(cube.position, "y", -10, 10, .5)
-cubeControls.add(cube.position, "z", -10, 10, .5)
-cubeControls.add(cube, "visible")
-cubeControls.addColor(cube.material, "color")
-const lightControls = gui.addFolder("Light")
-lightControls.add(directionallight.position, "x", -10, 10, .5)
-lightControls.add(directionallight.position, "y", -10, 10, .5)
-lightControls.add(directionallight.position, "z", -10, 10, .5)
-lightControls.add(directionallight, "intensity", 0, 1, .1)
-lightControls.addColor(directionallight, "color")
+// const cubeControls = gui.addFolder("Cube")
+// cubeControls.add(cube.position, "x", -10, 10, .5)
+// cubeControls.add(cube.position, "y", -10, 10, .5)
+// cubeControls.add(cube.position, "z", -10, 10, .5)
+// cubeControls.add(cube, "visible")
+// cubeControls.addColor(cube.material, "color")
+// const lightControls = gui.addFolder("Light")
+// lightControls.add(directionallight.position, "x", -10, 10, .5)
+// lightControls.add(directionallight.position, "y", -10, 10, .5)
+// lightControls.add(directionallight.position, "z", -10, 10, .5)
+// lightControls.add(directionallight, "intensity", 0, 1, .1)
+// lightControls.addColor(directionallight, "color")
+
+const viewer = new OBC.Components()
+
+const sceneComponent = new OBC.SimpleScene(viewer)
+sceneComponent.setup()
+viewer.scene = sceneComponent
+const scene = sceneComponent.get()
+scene.background = null
+
+const viewerContainer = document.getElementById("viewer-container") as HTMLDivElement
+const rendererComponent = new OBC.SimpleRenderer(viewer, viewerContainer)
+viewer.renderer = rendererComponent
+
+const cameraCOmponent = new OBC.OrthoPerspectiveCamera(viewer)
+viewer.camera = cameraCOmponent
+
+viewer.init()
+cameraCOmponent.updateAspect()
+
+scene.add(cube)
