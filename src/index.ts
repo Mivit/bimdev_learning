@@ -273,10 +273,25 @@ ifcLoader.settings.wasm = {
 const highlighter = new OBC.FragmentHighlighter(viewer)
 highlighter.setup()
 
+const propertiesProcessor = new OBC.IfcPropertiesProcessor(viewer)
+highlighter.events.select.onClear.add(() => {
+  propertiesProcessor.cleanPropertiesList()
+})
+
+
 const classifier = new OBC.FragmentClassifier(viewer)
 const classificationsWindow  = new OBC.FloatingWindow(viewer)
+classificationsWindow.visible = false
 viewer.ui.add(classificationsWindow) 
 classificationsWindow.title = "Model Groups"
+
+const classificationsBtn = new OBC.Button(viewer)
+classificationsBtn.materialIcon = "account_tree"
+
+classificationsBtn.onClick.add(() => {
+  classificationsWindow.visible = !classificationsWindow.visible
+  classificationsBtn.active = classificationsWindow.visible
+})  
 
 async function createModelTree() {
   const fragmentTree = new OBC.FragmentTree(viewer)
@@ -302,10 +317,18 @@ ifcLoader.onIfcLoaded.add( async (ifcModel) => {
   const tree = await createModelTree()
   await classificationsWindow.slots.content.dispose(true)
   classificationsWindow.addChild(tree)
+
+  propertiesProcessor.process(ifcModel)
+  highlighter.events.select.onHighlight.add((fragmentMap) => {
+    const expressID = [...Object.values(fragmentMap)[0]][0]
+    propertiesProcessor.renderProperties(ifcModel, Number(expressID))
+  })
 })
 
 const toolbar = new OBC.Toolbar(viewer)
 toolbar.addChild(
-  ifcLoader.uiElement.get("main")
+  ifcLoader.uiElement.get("main"),
+  classificationsBtn,
+  propertiesProcessor.uiElement.get("main"),  
 )
 viewer.ui.addToolbar(toolbar)
