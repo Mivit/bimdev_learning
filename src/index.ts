@@ -281,7 +281,7 @@ classificationsWindow.title = "Model Groups"
 async function createModelTree() {
   const fragmentTree = new OBC.FragmentTree(viewer)
   await fragmentTree.init()
-  await fragmentTree.update(["storeys", "entities"])
+  await fragmentTree.update(["model", "storeys", "entities"])
   fragmentTree.onHovered.add((fragmentMap) => {
     highlighter.highlightByID("hover", fragmentMap)
   })
@@ -294,6 +294,9 @@ async function createModelTree() {
 
 ifcLoader.onIfcLoaded.add( async (ifcModel) => {
   highlighter.update()
+  console.log(classifier)
+  
+  classifier.byModel(ifcModel.uuid,ifcModel)
   classifier.byStorey(ifcModel)
   classifier.byEntity(ifcModel)
   const tree = await createModelTree()
