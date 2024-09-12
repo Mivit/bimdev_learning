@@ -278,14 +278,25 @@ const classificationsWindow  = new OBC.FloatingWindow(viewer)
 viewer.ui.add(classificationsWindow) 
 classificationsWindow.title = "Model Groups"
 
-ifcLoader.onIfcLoaded.add(async (ifcModel) => {
-  highlighter.update()
-  classifier.byStorey(ifcModel)
-  classifier.byEntity(ifcModel)
+async function createModelTree() {
   const fragmentTree = new OBC.FragmentTree(viewer)
   await fragmentTree.init()
   await fragmentTree.update(["storeys", "entities"])
+  fragmentTree.onHovered.add((fragmentMap) => {
+    highlighter.highlightByID("hover", fragmentMap)
+  })
+  fragmentTree.onSelected.add((fragmentMap) => {
+    highlighter.highlightByID("select", fragmentMap)
+  })
   const tree = fragmentTree.get().uiElement.get("tree")
+  return tree
+}
+
+ifcLoader.onIfcLoaded.add( async (ifcModel) => {
+  highlighter.update()
+  classifier.byStorey(ifcModel)
+  classifier.byEntity(ifcModel)
+  const tree = await createModelTree()
   await classificationsWindow.slots.content.dispose(true)
   classificationsWindow.addChild(tree)
 })
