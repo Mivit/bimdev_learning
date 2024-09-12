@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Static start page</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Round">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="components.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -212,7 +214,7 @@
             </div>
           </div> 
         </div>
-        <div id="viewer-container" class="dashboard-card" style="min-width: 0;"></div>
+        <div id="viewer-container" class="dashboard-card" style="min-width: 0; position: relative;"></div>
       </div>
     </div>
     <div class="page" id="user-page" style="display: none;">
@@ -464,6 +466,6 @@
       </div>
     </div>    
   </main>
+  <script type="module" src="./src/index.ts"></script>
 </body>
-<script type="module" src="./src/index.ts"></script>
 </html>

@@ -26,6 +26,7 @@
   font-family: 'Inter', sans-serif;
   margin: 0;
   padding: 0;
+  font-size: var(--font-base);
 }
 
 body {
@@ -235,17 +236,6 @@ form .form-field-container {
   flex-direction: column;
 }
 
-.error-dialog {
-  width: 650px; 
-  border-radius: 10px; 
-  background-color: var(--background-100);
-  color: white;
-}
-
-div .error-dialog {
-  padding: 20px;
-}
-
 label {
   font-size: var(--font-base);
   margin-bottom: 10px;
@@ -267,6 +257,18 @@ input, textarea, select {
 
 input:focus, textarea:focus, select:focus {
   outline: 2px solid var(--primary);
+}
+
+/* Errors */
+.error-dialog {
+  width: 650px; 
+  border-radius: 10px; 
+  background-color: var(--background-100);
+  color: white;
+}
+
+div .error-dialog {
+  padding: 20px;
 }
 
 /* Project details page */

@@ -194,8 +194,6 @@ if (addTodoBtn) {
 }
 
 
-
-
 // Export and import projects buttons
 const exportProjectsBtn = document.getElementById("export-projects-btn")
 if (exportProjectsBtn) {
@@ -244,75 +242,6 @@ usersBtn?.addEventListener("click", () => {
   switchPage('users')
 })
 
-
-// // Three.js viewer
-// const scene = new THREE.Scene()
-
-// const viewerContainer = document.getElementById("viewer-container") as HTMLElement
-// const camera = new THREE.PerspectiveCamera(75)
-// camera.position.z = 5
-
-// const renderer = new THREE.WebGLRenderer({alpha: true, antialias: true})
-// viewerContainer.appendChild(renderer.domElement)
-
-// function resizeViewer () {
-//   const containerDimensions = viewerContainer.getBoundingClientRect()
-//   renderer.setSize(containerDimensions.width, containerDimensions.height)
-//   const aspectRatio = containerDimensions.width / containerDimensions.height
-//   camera.aspect = aspectRatio
-//   camera.updateProjectionMatrix()
-// }
-
-// window.addEventListener("resize", resizeViewer)
-
-// resizeViewer()
-
-const boxGeometry = new THREE.BoxGeometry()
-const material = new THREE.MeshStandardMaterial()
-const cube = new THREE.Mesh(boxGeometry, material)
-
-// const directionallight = new THREE.DirectionalLight()
-// const ambientlight = new THREE.AmbientLight()
-// const light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1)
-// ambientlight.intensity = 0.9
-
-// // scene.add(cube, directionallight, ambientlight)
-// scene.add(directionallight, ambientlight, light)
-
-// const controls = new OrbitControls(camera, viewerContainer)
-
-// renderer.render(scene, camera)
-
-// function renderScene () {
-//   renderer.render(scene, camera)
-//   requestAnimationFrame(renderScene)
-// }
-
-// renderScene()
-
-// const axes = new THREE.AxesHelper()
-// const grid = new THREE.GridHelper(10, 10)
-// grid.material.transparent = true
-// grid.material.opacity = 0.4
-// grid.material.color = new THREE.Color("#808080") 
-
-// scene.add(axes, grid)
-
-// const gui = new GUI()
-
-// const cubeControls = gui.addFolder("Cube")
-// cubeControls.add(cube.position, "x", -10, 10, .5)
-// cubeControls.add(cube.position, "y", -10, 10, .5)
-// cubeControls.add(cube.position, "z", -10, 10, .5)
-// cubeControls.add(cube, "visible")
-// cubeControls.addColor(cube.material, "color")
-// const lightControls = gui.addFolder("Light")
-// lightControls.add(directionallight.position, "x", -10, 10, .5)
-// lightControls.add(directionallight.position, "y", -10, 10, .5)
-// lightControls.add(directionallight.position, "z", -10, 10, .5)
-// lightControls.add(directionallight, "intensity", 0, 1, .1)
-// lightControls.addColor(directionallight, "color")
-
 const viewer = new OBC.Components()
 
 const sceneComponent = new OBC.SimpleScene(viewer)
@@ -322,13 +251,34 @@ const scene = sceneComponent.get()
 scene.background = null
 
 const viewerContainer = document.getElementById("viewer-container") as HTMLDivElement
-const rendererComponent = new OBC.SimpleRenderer(viewer, viewerContainer)
+const rendererComponent = new OBC.PostproductionRenderer(viewer, viewerContainer)
 viewer.renderer = rendererComponent
 
-const cameraCOmponent = new OBC.OrthoPerspectiveCamera(viewer)
-viewer.camera = cameraCOmponent
+const cameraComponent = new OBC.OrthoPerspectiveCamera(viewer)
+viewer.camera = cameraComponent
+
+const raycasterComponent = new OBC.SimpleRaycaster(viewer)
+viewer.raycaster = raycasterComponent
 
 viewer.init()
-cameraCOmponent.updateAspect()
+cameraComponent.updateAspect()
+rendererComponent.postproduction.enabled = true
 
-scene.add(cube)
+const ifcLoader = new OBC.FragmentIfcLoader(viewer)
+ifcLoader.settings.wasm = {
+  path: "https://unpkg.com/web-ifc@0.0.43/",
+  absolute: true
+}
+
+const highlighter = new OBC.FragmentHighlighter(viewer)
+highlighter.setup()
+
+ifcLoader.onIfcLoaded.add((ifcModel) => {
+  highlighter.update()
+})
+
+const toolbar = new OBC.Toolbar(viewer)
+toolbar.addChild(
+  ifcLoader.uiElement.get("main")
+)
+viewer.ui.addToolbar(toolbar)
