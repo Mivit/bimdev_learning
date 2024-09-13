@@ -1,6 +1,12 @@
 import * as OBC from 'openbim-components'
 
-export class TodoCreator extends OBC.Component<null> implements OBC.UI {
+interface Todo { 
+  description: string
+  date: Date
+  fragmentMap: OBC.FragmentIdMap
+}
+
+export class TodoCreator extends OBC.Component<Todo[]> implements OBC.UI {
   static uuid = "7d6ed77d-cf89-44e9-961b-f687747020e5"
   enabled = true
   uiElement = new OBC.UIElement<{
@@ -9,6 +15,7 @@ export class TodoCreator extends OBC.Component<null> implements OBC.UI {
   }>()
 
   private _components: OBC.Components
+  private _list: Todo[] = []
   
   constructor(components: OBC.Components) {
     super(components)
@@ -17,8 +24,16 @@ export class TodoCreator extends OBC.Component<null> implements OBC.UI {
     this.setUI()
   }
 
-  addTodo(description: string) {
-
+  async addTodo(description: string) {
+    const highlighter = await this._components.tools.get(OBC.FragmentHighlighter)
+    const todo: Todo = {
+      description,
+      date: new Date(),
+      fragmentMap: highlighter.selection.select
+    }
+    // this._list.push(todo)
+    console.log(todo);
+    
   }
 
   private setUI() {
@@ -42,9 +57,13 @@ export class TodoCreator extends OBC.Component<null> implements OBC.UI {
     form.slots.content.get().style.flexDirection = "column"
     form.slots.content.get().style.rowGap = "20px"
     
-    form.onAccept.add(() => {})
+    form.onAccept.add(() => {
+      this.addTodo(descriptionInput.value)
+    })
 
-    form.onCancel.add(() => form.visible = false)
+    form.onCancel.add(() => {
+      form.visible = false
+    })
 
 
     newTodoBtn.onClick.add(() => form.visible = true)
@@ -63,5 +82,7 @@ export class TodoCreator extends OBC.Component<null> implements OBC.UI {
     this.uiElement.set({activationButton, todoList})
   }
 
-  get(): null {}
+  get(): Todo[] {
+    return this._list
+  }
 }
