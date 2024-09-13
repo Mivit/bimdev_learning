@@ -331,9 +331,17 @@ async function createModelTree() {
   return tree
 }
 
+const culler = new OBC.ScreenCuller(viewer)
+cameraComponent.controls.addEventListener("sleep", () => {
+  culler.needsUpdate = true
+})
+
 async function onModelLoaded(ifcModel: FragmentsGroup) {
   highlighter.update()
-
+  for (const fragment of ifcModel.items) {
+    culler.add(fragment.mesh)
+  }
+  culler.needsUpdate = true
   try {
     classifier.byModel(ifcModel.uuid,ifcModel)
     classifier.byStorey(ifcModel)
@@ -425,5 +433,6 @@ toolbar.addChild(
   importFragmentBtn,
   classificationsBtn,
   propertiesProcessor.uiElement.get("main"),  
+fragmentManager.uiElement.get("main")
 )
 viewer.ui.addToolbar(toolbar)
