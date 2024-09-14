@@ -1,8 +1,7 @@
-import { TodoCreator } from './bim-components/TodoCreator/index';
 import * as THREE from "three"
 import * as OBC from "openbim-components"
+import { TodoCreator } from './bim-components/TodoCreator/index'
 import { FragmentsGroup, IfcProperties } from "bim-fragment"
-import { TodoCreator } from "./bim-components/TodoCreator"
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min"
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
 import { IProject, ProjectStatus, TodoStatus, ProjectUserRole } from "./classes/Project"
@@ -428,6 +427,7 @@ function importPropertiesJSON() {
 )}
 
 const todoCreator = new TodoCreator(viewer)
+
 
 const toolbar = new OBC.Toolbar(viewer)
 toolbar.addChild(
