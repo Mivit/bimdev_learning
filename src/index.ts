@@ -362,8 +362,8 @@ async function onModelLoaded(ifcModel: FragmentsGroup) {
 }
 
 ifcLoader.onIfcLoaded.add( async (ifcModel) => {
-  exportFragments(ifcModel)
-  exportToJSON(ifcModel)
+  // exportFragments(ifcModel)
+  // exportToJSON(ifcModel)
   onModelLoaded(ifcModel)
 })
 
@@ -427,7 +427,10 @@ function importPropertiesJSON() {
 )}
 
 const todoCreator = new TodoCreator(viewer)
-
+await todoCreator.setup()
+todoCreator.onProjectCreated.add((todo) => {
+  console.log(todo);  
+})
 
 const toolbar = new OBC.Toolbar(viewer)
 toolbar.addChild(

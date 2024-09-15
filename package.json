@@ -14,6 +14,7 @@
     "vite": "^5.0.6"
   },
   "dependencies": {
+    "@types/uuid": "^10.0.0",
     "bim-fragment": "1.0.22",
     "openbim-components": "1.1.5",
     "three": "0.152.2",

@@ -303,13 +303,14 @@ div .error-dialog {
 .todo-item {
   margin: 0 0 10px 0;
   padding: 20px;
-  background-color: var(--background-200);
+  outline: 2px solid var(--background-200);
   border-radius: 10px;
   cursor: pointer;
 }
 
 .todo-item:hover {
-  background-color: var(--primary);
+  background-color: #26282b;
+  outline: 2px solid var(--primary);
 }
 
 .todo-date {
