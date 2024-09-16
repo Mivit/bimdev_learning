@@ -436,12 +436,19 @@ todoCreator.onProjectCreated.add((todo) => {
 const simpleQTO = new SimpleQTO(viewer)
 await simpleQTO.setup()
 
+const propsFinder = new OBC.IfcPropertiesFinder(viewer)
+await propsFinder.init()
+propsFinder.onFound.add((fragmentIdMap) => {
+  highlighter.highlightByID("select", fragmentIdMap)
+})
+
 const toolbar = new OBC.Toolbar(viewer)
 toolbar.addChild(
   ifcLoader.uiElement.get("main"),
   importFragmentBtn,
   classificationsBtn,
   propertiesProcessor.uiElement.get("main"),  
+  propsFinder.uiElement.get("main"),
   fragmentManager.uiElement.get("main"),
   todoCreator.uiElement.get("activationButton"),
   simpleQTO.uiElement.get("activationButton")
