@@ -1,6 +1,7 @@
 import * as THREE from "three"
 import * as OBC from "openbim-components"
-import { TodoCreator } from './bim-components/TodoCreator/index'
+import { TodoCreator } from './bim-components/TodoCreator'
+import { SimpleQTO } from './bim-components/SimpleQTO'
 import { FragmentsGroup, IfcProperties } from "bim-fragment"
 import { GUI } from "three/examples/jsm/libs/lil-gui.module.min"
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
@@ -292,7 +293,7 @@ function exportToJSON(model: FragmentsGroup) {
 
 const ifcLoader = new OBC.FragmentIfcLoader(viewer)
 ifcLoader.settings.wasm = {
-  path: "https://unpkg.com/web-ifc@0.0.43/",
+  path: "https://unpkg.com/web-ifc@0.0.44/",
   absolute: true
 }
 
@@ -432,6 +433,9 @@ todoCreator.onProjectCreated.add((todo) => {
   console.log(todo);  
 })
 
+const simpleQTO = new SimpleQTO(viewer)
+await simpleQTO.setup()
+
 const toolbar = new OBC.Toolbar(viewer)
 toolbar.addChild(
   ifcLoader.uiElement.get("main"),
@@ -439,6 +443,8 @@ toolbar.addChild(
   classificationsBtn,
   propertiesProcessor.uiElement.get("main"),  
   fragmentManager.uiElement.get("main"),
-  todoCreator.uiElement.get("activationButton")
+  todoCreator.uiElement.get("activationButton"),
+  simpleQTO.uiElement.get("activationButton")
+
 )
 viewer.ui.addToolbar(toolbar)
