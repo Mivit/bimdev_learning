@@ -28,7 +28,7 @@ export function ProjectsPage(props: Props) {
 
   const onNewProjectClick = () => {
     const newProjectModal = document.getElementById("new-project-modal")
-    if (!(newProjectModal && newProjectModal instanceof HTMLDialogElement)) { return}
+    if (!(newProjectModal && newProjectModal instanceof HTMLDialogElement)) { return }
     newProjectModal.showModal()
   }
 
@@ -44,7 +44,6 @@ export function ProjectsPage(props: Props) {
       projectStatus: formData.get('status') as ProjectStatus,
       finishDate: new Date(formData.get('finishDate') as string),
     }
-    // console.log('projectData', projectData);
     
     try {
       const project = props.projectsManager.newProject(projectData)
