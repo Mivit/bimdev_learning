@@ -29,7 +29,7 @@
   font-size: var(--font-base);
 }
 
-body {
+#app {
   display: grid;
   grid-template-columns: 300px 1fr;
   grid-template-areas: 'sidebar content';
@@ -140,7 +140,7 @@ header {
   height: 40px;
   font-size: 20px; 
   text-transform: uppercase;
-  padding: 6px 0 6px 12px;
+  padding: 0 0 0 6px;
 }
 
 .project-card {

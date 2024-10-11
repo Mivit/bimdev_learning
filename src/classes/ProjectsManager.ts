@@ -5,11 +5,12 @@ const  availableColors = ["#ca8134", "#55ad99", "#a55d93", "#ad99b9", "#ad2133",
 
 export class ProjectsManager {
   list: Project[] = []
-  ui: HTMLElement
+  onProjectCreated = (project: Project) => {}
+  onProjectDeleted = (project: Project) => {}
+
   todoUI: HTMLElement
 
-  constructor(container: HTMLElement) {
-    this.ui = container
+  constructor() {
     const project = this.newProject({
       name: "Default Project",
       description: "This is just a default app project",
@@ -17,7 +18,6 @@ export class ProjectsManager {
       userRole: "Architect",
       finishDate: new Date()
     })
-    project.ui.click()
   }
   
   newProject(data: IProject): Project {
@@ -36,21 +36,23 @@ export class ProjectsManager {
     } 
     
     const newProject = new Project(data) 
-    const pElemen = newProject.ui.getElementsByTagName("p")
-    pElemen[0].style.backgroundColor = availableColors[Math.floor(Math.random()*6)]
-    newProject.ui.addEventListener("click", () => {
-      const projectsPage = document.getElementById("projects-page")
-      const detailsPage = document.getElementById("project-details")
-      if (!(projectsPage && detailsPage)) { return }
-      projectsPage.style.display = "none"
-      detailsPage.style.display = "flex"
-      this.setDetailsPage(newProject)
-      // console.log('newProject', newProject.todos);
+    // const pElemen = newProject.ui.getElementsByTagName("p")
+    // pElemen[0].style.backgroundColor = availableColors[Math.floor(Math.random()*6)]
+    // newProject.ui.addEventListener("click", () => {
+    //   const projectsPage = document.getElementById("projects-page")
+    //   const detailsPage = document.getElementById("project-details")
+    //   if (!(projectsPage && detailsPage)) { return }
+    //   projectsPage.style.display = "none"
+    //   detailsPage.style.display = "flex"
+    //   this.setDetailsPage(newProject)
+    //   // console.log('newProject', newProject.todos);
       
-    })
+    // })
     // append the new project to the projects list in the UI and our list
-    this.ui.append(newProject.ui)
+    // console.log('newProject', newProject);
+    
     this.list.push(newProject)   
+    this.onProjectCreated(newProject)
     return newProject
   }
 
@@ -187,7 +189,7 @@ export class ProjectsManager {
   addTodo(name: string, todoData: any) {
     const project = this.getProjectsByName(name)[0]
     if (project) {
-      console.log('Current Todos:', project.todos);
+      // console.log('Current Todos:', project.todos);
       
       if (!todoData.dueDate || !this.isValidDate(todoData.dueDate)) {
         todoData.dueDate = new Date(Date.now() + 12096e5) //Today + 14 days
@@ -214,6 +216,7 @@ export class ProjectsManager {
     project.ui.remove()
     const remainingProjects = this.list.filter(project => project.id !== id)
     this.list = remainingProjects
+    this.onProjectDeleted(project)
   }
 
   totalCost(): number {
