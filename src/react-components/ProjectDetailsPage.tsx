@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { ProjectsManager } from '../classes/ProjectsManager';
 import { IProject, ProjectStatus, ProjectUserRole, Project } from '../classes/Project'
-
 
 interface Props {
   projectsManager: ProjectsManager
@@ -14,11 +13,8 @@ export function ProjectDetailsPage(props: Props) {
   const project = props.projectsManager.getProject(routeParams.id)
   if (!project) { return (<p>No project with {routeParams.id} was found</p>) }  
 
-  const [input, setInput] = React.useState([]))
-
-  // copy project to editProject
-  const editProject = {...project}
- 
+  const [initialProject] = React.useState<Project>(project)
+  const [updatedProject, setUpdatedProject] = React.useState<Project>(project)
 
   const onEditProjectClick = () => {
     const editProjectModal = document.getElementById("edit-project-modal")
@@ -42,15 +38,16 @@ export function ProjectDetailsPage(props: Props) {
     try {
       const project = props.projectsManager.newProject(projectData)
       projectForm.reset()
-      const newProjectModal = document.getElementById("new-project-modal")    
-      if (!(newProjectModal && newProjectModal instanceof HTMLDialogElement)) { return}
-      newProjectModal.close()
+      const editProjectModal = document.getElementById("edit-project-modal")    
+      if (!(editProjectModal && editProjectModal instanceof HTMLDialogElement)) { return}
+      editProjectModal.close()
     } catch (error) {
       alert(error)
     }
   }
 
   const onDialogCancel = () => {
+    setUpdatedProject(initialProject)
     const editProjectModal = document.getElementById("edit-project-modal")
     const projectForm = document.getElementById("new-project-form")
     if (!(projectForm && projectForm instanceof HTMLFormElement)) { return }
@@ -60,6 +57,13 @@ export function ProjectDetailsPage(props: Props) {
     editProjectModal.close()
   }
 
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = event.target
+    setUpdatedProject(prevState => ({
+      ...prevState,
+      [name]: value
+    }))
+  }
 
 
   return (
@@ -76,8 +80,8 @@ export function ProjectDetailsPage(props: Props) {
                 type="text"
                 id="project_name"
                 name="name"
-                value={editProject.name}
-                onChange={(e) => handleChange(e)}/>
+                value={updatedProject.name}
+                onChange={handleInputChange}/>
               <p style={{
                 color: "gray",
                 fontSize: "0.8rem",
