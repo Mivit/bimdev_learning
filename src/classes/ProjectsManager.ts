@@ -6,6 +6,7 @@ const  availableColors = ["#ca8134", "#55ad99", "#a55d93", "#ad99b9", "#ad2133",
 export class ProjectsManager {
   list: Project[] = []
   onProjectCreated = (project: Project) => {}
+  onProjectUpdated = (project: Project) => {}
   onProjectDeleted = (project: Project) => {}
 
   todoUI: HTMLElement
@@ -50,7 +51,6 @@ export class ProjectsManager {
     // })
     // append the new project to the projects list in the UI and our list
     // console.log('newProject', newProject);
-    
     this.list.push(newProject)   
     this.onProjectCreated(newProject)
     return newProject
@@ -58,6 +58,7 @@ export class ProjectsManager {
 
   updateProject(data: IProject, id: string): Project {
     const project = this.getProject(id)
+
     if (!project) {
       throw new Error(`Project with id: "${id}" not found`)
     }
@@ -83,123 +84,10 @@ export class ProjectsManager {
     project.projectStatus = data.projectStatus
     project.finishDate = new Date(data.finishDate)
 
-    this.setDetailsPage(project)
-    this.setProjectsPage(project)
+    console.log('project', project);
+    
+    this.onProjectUpdated(project)
     return project
-  }
-
-  private setDetailsPage(project: Project) {
-    const detailsPage = document.getElementById("project-details")
-    const todosContainer = document.getElementById("todo-container")
-    if (!detailsPage) { return }
-
-    for (const key in project) {
-      const HTMLElements = detailsPage.querySelectorAll(`[data-project-info=${key}]`)
-      if (HTMLElements) {
-        if (key === "finishDate") {
-          HTMLElements[0].textContent = project.finishDate.toLocaleDateString('sv-SE');
-        } else if (key === "progress") {
-          const progress = HTMLElements[0] as HTMLElement;
-          progress.style.width = project.progress + "%";
-          progress.textContent = project.progress.toString() + "%";
-        } else {
-          for (const element of HTMLElements) {  
-            element.textContent = project[key]
-          }
-        }        
-      }
-    }
-    if (!todosContainer) { return }
-    const todoElement = document.createElement("div")
-    if (project.todos.length < 1) {
-      todoElement.textContent = "No todos"
-      todosContainer.append(todoElement)
-      return
-    } else  {
-      todosContainer.innerHTML = ""
-      for (const todo of project.todos) {
-        const todoElement = document.createElement("div")
-        todoElement.className = "todo-item"
-        todoElement.style.display = "flex"
-        todoElement.style.justifyContent = "space-between"
-        todoElement.style.alignItems = "center"
-        todoElement.innerHTML = `
-            <div style="display: flex; align-items: center; justify-content: space-between;">
-              <div style="display: flex;  align-items: center; border-radius: 5px; padding: 10px; background-color: #969696;">
-                <span class="material-icons-round">
-                  construction
-                  </span>
-              </div>
-              <div style="padding: 0 10px;">
-                <h5 id="todo_title">${todo.title}</h5>
-                <p id="todo_description">${todo.description}</p>
-                <p id="todo_status" style="padding: 10px 0 0 0;">${todo.status}</p>
-              </div>
-            </div>
-            <p class="todo-date">Fri, 20 sep</p>
-        `
-        switch (todo.status) {
-          case "Pending":
-            todoElement.className = "todo-item alert"
-
-            break;
-          case "Ongoing":
-            todoElement.className = "todo-item warning"
-            break;
-          case "Finished":
-            todoElement.className = "todo-item ok"
-            break;
-        }
-
-        todosContainer.append(todoElement)
-
-        todoElement.addEventListener("click", () => {
-          const todoStatus = todoElement.getElementsByTagName("p")[1]
-          
-          switch (todo.status) {  
-            case "Pending":
-              todoElement.className = "todo-item warning";
-              todo.status = "Ongoing";
-              todoStatus.textContent = "Ongoing"
-              break;
-            case "Ongoing":
-              todoElement.className = "todo-item ok"
-              todo.status = "Finished"
-              todoStatus.textContent = "Finished"
-              break;
-            case "Finished":
-              todoElement.className = "todo-item alert"
-              todo.status = "Pending"
-              todoStatus.textContent = "Pending"
-              break;
-          }
-        })
-      }
-    }
-  }
-
-  private setProjectsPage(project: Project) {
-    // console.log('setProjectsPage', project);
-    project.ui.getElementsByTagName("h5")[0].textContent = project.name
-    project.ui.getElementsByTagName("p")[1].textContent = project.description    
-    project.ui.getElementsByTagName("p")[3].textContent = project.projectStatus    
-    project.ui.getElementsByTagName("p")[5].textContent = project.userRole    
-  }
-  
-  addTodo(name: string, todoData: any) {
-    const project = this.getProjectsByName(name)[0]
-    if (project) {
-      // console.log('Current Todos:', project.todos);
-      
-      if (!todoData.dueDate || !this.isValidDate(todoData.dueDate)) {
-        todoData.dueDate = new Date(Date.now() + 12096e5) //Today + 14 days
-      } 
-      project.addTodo(todoData)
-      this.setDetailsPage(project)
-
-    } else {
-      throw new Error(`Project with id: "${name}" not found`)
-    }    
   }
 
   getProject(id: string): Project | undefined {

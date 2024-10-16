@@ -236,6 +236,10 @@ form .form-field-container {
   flex-direction: column;
 }
 
+form .form-field-container {
+  padding: 0 20px;
+}
+
 label {
   font-size: var(--font-base);
   margin-bottom: 10px;
@@ -288,6 +292,13 @@ div .error-dialog {
   height: 100%;
 }
 
+.btn-primary {
+  background-color: transparent; 
+  outline: 2px solid var(--primary); 
+  width: 100px; 
+  text-align: center;
+}
+
 .btn-secondary {
   background-color: transparent; 
   outline: 2px solid #969696; 
@@ -298,6 +309,13 @@ div .error-dialog {
 .btn-secondary:hover {
   background-color: var(--primary); 
   outline: none;
+}
+
+.button-group {
+  padding: 20px ;
+  align-items: center;
+  display: flex;
+  column-gap: 20px;
 }
 
 .todo-item {

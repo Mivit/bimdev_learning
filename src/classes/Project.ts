@@ -21,8 +21,6 @@ export class Project implements IProject {
   finishDate: Date
   
   //Class internals
-  ui: HTMLDivElement
-  todoUi: HTMLDivElement
   cost: number = 1000
   progress: number = 0
   id: string
