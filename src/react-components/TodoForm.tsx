@@ -1,21 +1,21 @@
 import * as React from 'react';
 
 interface TodoFormProps {
-  onSubmit: (todo: string) => void;
-  onCancel: () => void;
+  onSubmit: (todo: string) => void
+  onCancel: () => void
 }
 
 export function TodoForm(props: TodoFormProps) {
-  const [todo, setTodo] = React.useState('');
+  const [todo, setTodo] = React.useState('')
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    props.onSubmit(todo);
+  const onHandleSubmit = (event: React.FormEvent) => {
+    event.preventDefault()
+    props.onSubmit(todo)
   };
 
   return (
     <dialog id="todo-form-modal">
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={onHandleSubmit}>
         <h2>Add Todo</h2>
         <div>
           <div className="form-field-container">

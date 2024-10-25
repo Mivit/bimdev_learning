@@ -5,6 +5,7 @@ const  availableColors = ["#ca8134", "#55ad99", "#a55d93", "#ad99b9", "#ad2133",
 
 export class ProjectsManager {
   list: Project[] = []
+  // events to handle projects, accepting projects as arguments
   onProjectCreated = (project: Project) => {}
   onProjectUpdated = (project: Project) => {}
   onProjectDeleted = (project: Project) => {}

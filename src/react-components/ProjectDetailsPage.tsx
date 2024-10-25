@@ -3,12 +3,18 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { TodoForm } from './TodoForm';
 import { ProjectsManager } from '../classes/ProjectsManager';
 import { IProject, ProjectStatus, ProjectUserRole, Project } from '../classes/Project'
+import { ProjectForm } from './ProjectForm';
 
 interface Props {
   projectsManager: ProjectsManager
 }
 
 export function ProjectDetailsPage(props: Props) {
+  const [projectsManager] = React.useState<ProjectsManager>(props.projectsManager)
+
+  const [isTodoFormOpen, setIsTodoFormOpen] = React.useState<boolean>(false)
+  const [isEditProjectFormOpen, setIsEditProjectFormOpen] = React.useState<boolean>(false)
+
   const routeParams = useParams<{ id: string }>()
   if (!routeParams.id) { 
     return (<p>A project ID is needed to see this page</p>) 
@@ -18,17 +24,19 @@ export function ProjectDetailsPage(props: Props) {
     return (<p>No project with {routeParams.id} was found</p>) 
   }  
 
-  const [currentProject, setCurrentProject] = React.useState<Project>(project)
-  const [updatedProject, setUpdatedProject] = React.useState<IProject>(project)
-  const [isEditProjectFormOpen, setIsEditProjectFormOpen] = React.useState(false)
-    const [isTodoFormOpen, setIsTodoFormOpen] = React.useState(false)
+  const [projects, setProjects] = React.useState<Project[]>(props.projectsManager.list)
+  props.projectsManager.onProjectCreated = () => {setProjects([...props.projectsManager.list])}
+  props.projectsManager.onProjectDeleted = () => {setProjects([...props.projectsManager.list])}
+
+  
 
   const onEditProjectClick = () => {
     console.log('edit project')
-    
+    if(!isEditProjectFormOpen) {return setIsEditProjectFormOpen(true)}
     const editProjectModal = document.getElementById("edit-project-modal")
-    if (!(editProjectModal && editProjectModal instanceof HTMLDialogElement)) { return }
-    editProjectModal.showModal()
+    if (editProjectModal && editProjectModal instanceof HTMLDialogElement) {
+      editProjectModal.showModal()
+    }    
   }
 
   const onAddTodoClick = () => {
@@ -42,13 +50,22 @@ export function ProjectDetailsPage(props: Props) {
 
   React.useEffect(() => {
     if (isTodoFormOpen) {
-      const todoFormModal = document.getElementById('todo-form-modal');
-      if (todoFormModal && todoFormModal instanceof HTMLDialogElement) {
-        todoFormModal.showModal();
-      }
+      const todoFormModal = document.getElementById('todo-form-modal')
+      if (!(todoFormModal && todoFormModal instanceof HTMLDialogElement)) { return }
+      todoFormModal.showModal()
     }
-  }, [isTodoFormOpen]);
+  }, [isTodoFormOpen])
 
+  React.useEffect(() => {
+    if (isEditProjectFormOpen) {
+      const editProjectModal = document.getElementById("edit-project-modal")
+      if (!(editProjectModal && editProjectModal instanceof HTMLDialogElement)) { return }
+      editProjectModal.showModal()
+    }
+  }, [isEditProjectFormOpen])
+
+  
+  
   const onTodoFormSubmit = ( todo: string) => {
     console.log('submit todo', todo);
     
@@ -72,12 +89,41 @@ export function ProjectDetailsPage(props: Props) {
     }
   }
 
+  const onEditProjectSubmit = (data: IProject) => {
+    console.log('submit edit project', data);
+    
+    try {
+      props.projectsManager.updateProject(data, project.id)
+      setIsEditProjectFormOpen(false)
+      const editProjectModal = document.getElementById("edit-project-modal")
+      if (!(editProjectModal && editProjectModal instanceof HTMLDialogElement)) { return}
+      editProjectModal.close()
+    } catch (error) {
+      alert(error)
+    }
+  }
+
+  const onEditProjectCancel = () => {
+    setIsEditProjectFormOpen(false)
+    const editProjectModal = document.getElementById("edit-project-modal")
+    if (!(editProjectModal && editProjectModal instanceof HTMLDialogElement)) { return}
+    editProjectModal.close()
+  }
+
   return (
     <div className="page" id="project-details">
       {isTodoFormOpen && (
         <TodoForm 
           onSubmit={onTodoFormSubmit}
           onCancel={onTodoFormCancel} 
+        />
+        
+      )}
+      {isEditProjectFormOpen && (
+        <ProjectForm 
+          project={project}
+          onSubmit={onEditProjectSubmit}
+          onCancel={onEditProjectCancel}
         />
       )}
       <header>

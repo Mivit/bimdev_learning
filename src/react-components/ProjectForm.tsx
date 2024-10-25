@@ -2,17 +2,22 @@ import * as React from 'react';
 import { useParams } from 'react-router-dom';
 import { ProjectsManager } from '../classes/ProjectsManager';
 import { IProject, ProjectStatus, ProjectUserRole, Project } from '../classes/Project';
+import { ProjectDetailsPage } from './ProjectDetailsPage';
 
 interface Props {
-  projectsManager: ProjectsManager
+  projectsManager: ProjectsManager,
+  project: IProject,
+  onSubmit: (project: IProject) => void,
+  onCancel: () => void
 }
 
-export function ProjectForm(openModal, closeModal) {
+export function ProjectForm(openModal, closeModal, props: Props) {
 
   const [initialProject, setInitialProject] = React.useState<IProject>()
   const [updatedProject, setUpdatedProject] = React.useState<IProject>()
   
-  
+  setInitialProject(props.project)
+
   const onFormSubmit = (event: React.FormEvent) => {
     event.preventDefault()
     const projectForm = document.getElementById("edit-project-form")
@@ -31,6 +36,7 @@ export function ProjectForm(openModal, closeModal) {
       const editProjectModal = document.getElementById("edit-project-modal")    
       if (!(editProjectModal && editProjectModal instanceof HTMLDialogElement)) { return}
       editProjectModal.close()
+      setUpdatedProject(projectData)
     } catch (error) {
       alert(error)
     }
@@ -44,6 +50,7 @@ export function ProjectForm(openModal, closeModal) {
     // console.log('reset');
     
     if (!(editProjectModal && editProjectModal instanceof HTMLDialogElement)) { return}
+
     editProjectModal.close()
   }
 
@@ -68,7 +75,7 @@ export function ProjectForm(openModal, closeModal) {
               type="text"
               id="project_name"
               name="name"
-              value={updatedProject.name}
+              value={initialProject?.name}
               onChange={handleInputChange}/>
             <p style={{
               color: "gray",
