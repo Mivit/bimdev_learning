@@ -41,30 +41,6 @@ export function ProjectsPage(props: Props) {
     openModal()
   }
 
-  // const onFormSubmit = (event: React.FormEvent) => {
-  //   event.preventDefault()
-  //   const projectForm = document.getElementById("new-project-form")
-  //   if (!(projectForm && projectForm instanceof HTMLFormElement)) { return }
-  //   const formData = new FormData(projectForm)
-  //   const projectData: IProject = {
-  //     name: formData.get('name') as string,
-  //     description: formData.get('description') as string,
-  //     userRole: formData.get('userRole') as ProjectUserRole,
-  //     projectStatus: formData.get('status') as ProjectStatus,
-  //     finishDate: new Date(formData.get('finishDate') as string),
-  //   }
-    
-  //   try {
-  //     const project = props.projectsManager.newProject(projectData)
-  //     projectForm.reset()
-  //     const newProjectModal = document.getElementById("new-project-modal")    
-  //     if (!(newProjectModal && newProjectModal instanceof HTMLDialogElement)) { return}
-  //     newProjectModal.close()
-  //   } catch (error) {
-  //     alert(error)
-  //   }
-  // }
-
   const onDialogCancel = () => {
     const newProjectModal = document.getElementById("modify-project-modal")
     const projectForm = document.getElementById("modify-project-form")
@@ -91,7 +67,7 @@ export function ProjectsPage(props: Props) {
 
   return (
     <div className="page" id="projects-page" style={{ display: "flex" }}>
-    <ProjectForm onCancel={onDialogCancel} openModal={openModal} project={new Project({name: "", description: "", userRole: "Architect", projectStatus: "Pending", finishDate: new Date()})} projectsManager={props.projectsManager} title={"New Project"}/>
+    <ProjectForm onCancel={onDialogCancel} project={new Project({name: "", description: "", userRole: "Architect", projectStatus: "Pending", finishDate: new Date()})} projectsManager={props.projectsManager} title={"New Project"}/>
     <dialog id="error-modal" className="error-dialog">
       <h2 style={{ margin: 20, paddingTop: 10 }}>New Project</h2>
       <div id="error-message"></div>

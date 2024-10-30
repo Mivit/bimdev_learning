@@ -60,7 +60,7 @@ export function ProjectDetailsPage(props: Props) {
   return (
     <div className="page" id="project-details">
       {editProjectIsOpen && (
-        <ProjectForm openModal={openModal} onCancel={onCancel} project={project} projectsManager={projectsManager}  title={"Edit Project"}/>)}
+        <ProjectForm onCancel={onCancel} project={project} projectsManager={projectsManager}  title={"Edit Project"}/>)}
       
       <header>
         <div>
