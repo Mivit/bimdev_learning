@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 interface TodoFormProps {
-  onSubmit: (todo: string) => void
+  onSubmit: (todo: {}) => void
   onCancel: () => void
 }
 

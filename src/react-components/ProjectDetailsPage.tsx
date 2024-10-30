@@ -53,15 +53,19 @@ export function ProjectDetailsPage(props: Props) {
     editProjectModal.showModal()
   }
 
-  const onCancel = () => {
+  const onCancelProject = () => {
     setEditProjectIsOpen(false)
   } 
+
+  const onSubmitTodo = (todo: {}) => {
+    console.log(todo)
+  }
 
   return (
     <div className="page" id="project-details">
       {editProjectIsOpen && (
-        <ProjectForm onCancel={onCancel} project={project} projectsManager={projectsManager}  title={"Edit Project"}/>)}
-      
+        <ProjectForm onCancel={onCancelProject} project={project} projectsManager={projectsManager}  title={"Edit Project"}/>)}
+        <TodoForm onSubmit={onSubmitTodo} onCancel={() => console.log('cancel')} />
       <header>
         <div>
           <h2>{project.name}</h2> 

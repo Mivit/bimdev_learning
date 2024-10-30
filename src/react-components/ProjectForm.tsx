@@ -29,7 +29,7 @@ export function ProjectForm({onCancel, project, projectsManager, title}: Project
     setInitialProject(newProject)
    } else {
     const id = initialProject.id
-    console.log(projectsManager.updateProject(initialProject, id)); 
+    projectsManager.updateProject(initialProject, id); 
    }
    
    const editProjectModal = document.getElementById("modify-project-modal")
@@ -45,7 +45,7 @@ export function ProjectForm({onCancel, project, projectsManager, title}: Project
   }
 
   React.useEffect(() => {
-   console.log("Project state updated", project);
+  //  console.log("Project state updated", project);
    
   }, [project])
 
