@@ -85,7 +85,7 @@ export class ProjectsManager {
     project.projectStatus = data.projectStatus
     project.finishDate = new Date(data.finishDate)
 
-    console.log('project', project);
+    // console.log('project', project);
     
     this.onProjectUpdated(project)
     return project

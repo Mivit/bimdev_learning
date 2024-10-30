@@ -1,71 +1,62 @@
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
 import { ProjectsManager } from '../classes/ProjectsManager';
 import { IProject, ProjectStatus, ProjectUserRole, Project } from '../classes/Project';
-import { ProjectDetailsPage } from './ProjectDetailsPage';
 
-interface Props {
-  projectsManager: ProjectsManager,
-  project: IProject,
-  onSubmit: (project: IProject) => void,
+interface ProjectFormProps {
+  openModal: () => void,
   onCancel: () => void
+  project: IProject
+  projectsManager: ProjectsManager
+  title: string
 }
 
-export function ProjectForm(openModal, closeModal, props: Props) {
+export function ProjectForm({openModal, onCancel, project, projectsManager, title}: ProjectFormProps) {
+   // use state to store the project data
+  const [initialProject, setInitialProject] = React.useState<IProject>(project)
 
-  const [initialProject, setInitialProject] = React.useState<IProject>()
-  const [updatedProject, setUpdatedProject] = React.useState<IProject>()
-  
-  setInitialProject(props.project)
-
-  const onFormSubmit = (event: React.FormEvent) => {
-    event.preventDefault()
-    const projectForm = document.getElementById("edit-project-form")
-    if (!(projectForm && projectForm instanceof HTMLFormElement)) { return }
-    const formData = new FormData(projectForm)
-    const projectData: IProject = {
-      name: formData.get('name') as string,
-      description: formData.get('description') as string,
-      userRole: formData.get('userRole') as ProjectUserRole,
-      projectStatus: formData.get('status') as ProjectStatus,
-      finishDate: new Date(formData.get('finishDate') as string),
-    }
-    
-    try {
-      projectForm.reset()
-      const editProjectModal = document.getElementById("edit-project-modal")    
-      if (!(editProjectModal && editProjectModal instanceof HTMLDialogElement)) { return}
-      editProjectModal.close()
-      setUpdatedProject(projectData)
-    } catch (error) {
-      alert(error)
-    }
+  openModal = () => {
+   
   }
 
-  const onDialogCancel = () => {
-    setUpdatedProject(initialProject)
-    const editProjectModal = document.getElementById("edit-project-modal")
-    const projectForm = document.getElementById("edit-project-form")
-    if (!(projectForm && projectForm instanceof HTMLFormElement)) { return }
-    // console.log('reset');
+  const onFormSubmit = (event) => {
+    event.preventDefault()
+    const formData = new FormData(event.target)
+    console.log(initialProject);
+    if (title === "New Project") {
+      const newProject = projectsManager.newProject({
+        name: formData.get('name') as string,
+        description: formData.get('description') as string,
+        userRole: formData.get('userRole') as ProjectUserRole,
+        projectStatus: formData.get('status') as ProjectStatus,
+        finishDate: new Date(formData.get('finishDate') as string),
+      })
+      console.log(newProject);
+      setInitialProject(newProject)
+    } else {
+      const id = initialProject.id
+      console.log(projectsManager.updateProject(initialProject, id)); 
+    }
     
-    if (!(editProjectModal && editProjectModal instanceof HTMLDialogElement)) { return}
-
+    const editProjectModal = document.getElementById("modify-project-modal")
+    if (!(editProjectModal && editProjectModal instanceof HTMLDialogElement)) { return }
+    editProjectModal.close()
+    
+  }
+  const onFormCancel = () => {
+    const editProjectModal = document.getElementById("modify-project-modal")
+    if (!(editProjectModal && editProjectModal instanceof HTMLDialogElement)) { return }
     editProjectModal.close()
   }
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = event.target
-    setUpdatedProject(prevState => ({
-      ...prevState,
-      [name]: value
-    }))
-  }
+  React.useEffect(() => {
+    console.log("Project state updated", project);
+    
+  }, [project])
 
   return (
-    <dialog id="edit-project-modal">
-      <form onSubmit={(event) => onFormSubmit(event)} id="edit-project-form">
-        <h2 style={{ margin: 20, paddingTop: 10 }}>Edit Project</h2>
+    <dialog id="modify-project-modal">
+      <form onSubmit={(event) => onFormSubmit(event)} id="modify-project-form">
+        <h2 style={{ margin: 20, paddingTop: 10 }}>{title}</h2>
         <div className="input-list">
           <div className="form-field-container">
             <label htmlFor="project_name">
@@ -75,8 +66,9 @@ export function ProjectForm(openModal, closeModal, props: Props) {
               type="text"
               id="project_name"
               name="name"
-              value={initialProject?.name}
-              onChange={handleInputChange}/>
+              value={initialProject.name}
+              onChange={(event) => setInitialProject({...initialProject, name: event.target.value})}
+             />
             <p style={{
               color: "gray",
               fontSize: "0.8rem",
@@ -93,14 +85,16 @@ export function ProjectForm(openModal, closeModal, props: Props) {
               cols={30}
               rows={5}
               placeholder="Give your project a nice description! So people is jealous about it."
-              defaultValue={""}
+              value={initialProject.description}
+              onChange={(event) => setInitialProject({...initialProject, description: event.target.value})}
+
             />
           </div>
           <div className="form-field-container">
             <label htmlFor="project_role">
               <span className="material-icons-round">person</span>Role
             </label>
-            <select id="project_role" name="userRole">
+            <select id="project_role" name="userRole" value={initialProject.userRole} onChange={(event) => setInitialProject({...initialProject, userRole: event.target.value})}>
               <option>Architect</option>
               <option>Engineer</option>
               <option>Developer</option>
@@ -111,7 +105,7 @@ export function ProjectForm(openModal, closeModal, props: Props) {
               <span className="material-icons-round">not_listed_location</span>
               Status
             </label>
-            <select id="project_status" name="status">
+            <select id="project_status" name="status" value={initialProject.projectStatus} onChange={(event) => setInitialProject({...initialProject, projectStatus: event.target.value})}>
               <option>Pending</option>
               <option>Active</option>
               <option>Finished</option>
@@ -124,9 +118,11 @@ export function ProjectForm(openModal, closeModal, props: Props) {
             </label>
             <input
               type="date"
-              id="finishDate"
+              id="project_finishDate"
               name="finishDate"
               pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}}"
+              value={initialProject.finishDate.toLocaleDateString()}
+              onChange={(event) => setInitialProject({...initialProject, finishDate: new Date(event.target.value)})}
             />
           </div>
           <div
@@ -140,7 +136,7 @@ export function ProjectForm(openModal, closeModal, props: Props) {
               type="reset"
               id="form-cancel"
               style={{ backgroundColor: "transparent" }}
-              onClick={onDialogCancel}
+              onClick={onFormCancel}
             >
               Cancel
             </button>

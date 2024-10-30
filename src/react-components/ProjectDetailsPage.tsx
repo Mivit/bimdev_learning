@@ -12,8 +12,9 @@ interface Props {
 export function ProjectDetailsPage(props: Props) {
   const [projectsManager] = React.useState<ProjectsManager>(props.projectsManager)
 
-  const [isTodoFormOpen, setIsTodoFormOpen] = React.useState<boolean>(false)
-  const [isEditProjectFormOpen, setIsEditProjectFormOpen] = React.useState<boolean>(false)
+  const [projects, setProjects] = React.useState<Project[]>(props.projectsManager.list)
+  props.projectsManager.onProjectUpdated = () => {setProjects([...props.projectsManager.list])}
+  props.projectsManager.onProjectDeleted = () => {setProjects([...props.projectsManager.list])}
 
   const routeParams = useParams<{ id: string }>()
   if (!routeParams.id) { 
@@ -23,109 +24,44 @@ export function ProjectDetailsPage(props: Props) {
   if (!project) { 
     return (<p>No project with {routeParams.id} was found</p>) 
   }  
+ 
+  React.useEffect(() => {
+    console.log("ProjectsManager state updated", projectsManager)
+    
+  }, [projectsManager])
 
-  const [projects, setProjects] = React.useState<Project[]>(props.projectsManager.list)
-  props.projectsManager.onProjectCreated = () => {setProjects([...props.projectsManager.list])}
-  props.projectsManager.onProjectDeleted = () => {setProjects([...props.projectsManager.list])}
+  const [editProjectIsOpen, setEditProjectIsOpen] = React.useState(false);
 
-  
+  React.useEffect(() => {
+    if (editProjectIsOpen) {
+      openModal()
+    }
+  }, [editProjectIsOpen])
 
   const onEditProjectClick = () => {
-    console.log('edit project')
-    if(!isEditProjectFormOpen) {return setIsEditProjectFormOpen(true)}
-    const editProjectModal = document.getElementById("edit-project-modal")
-    if (editProjectModal && editProjectModal instanceof HTMLDialogElement) {
-      editProjectModal.showModal()
-    }    
+    setEditProjectIsOpen(true)
+    openModal()    
   }
 
   const onAddTodoClick = () => {
     console.log('add todo')
-    if(!isTodoFormOpen) {return setIsTodoFormOpen(true)}
-    const todoFormModal = document.getElementById('todo-form-modal')
-    if (todoFormModal && todoFormModal instanceof HTMLDialogElement) {
-      todoFormModal.showModal();
-    }
   }
 
-  React.useEffect(() => {
-    if (isTodoFormOpen) {
-      const todoFormModal = document.getElementById('todo-form-modal')
-      if (!(todoFormModal && todoFormModal instanceof HTMLDialogElement)) { return }
-      todoFormModal.showModal()
-    }
-  }, [isTodoFormOpen])
-
-  React.useEffect(() => {
-    if (isEditProjectFormOpen) {
-      const editProjectModal = document.getElementById("edit-project-modal")
-      if (!(editProjectModal && editProjectModal instanceof HTMLDialogElement)) { return }
-      editProjectModal.showModal()
-    }
-  }, [isEditProjectFormOpen])
-
-  
-  
-  const onTodoFormSubmit = ( todo: string) => {
-    console.log('submit todo', todo);
-    
-    const updatedProject = {
-      ...currentProject,
-      todos: [...currentProject.todos, todo],
-    }
-    setCurrentProject(updatedProject)
-    setIsTodoFormOpen(false)
-    const todoFormModal = document.getElementById('todo-form-modal')
-    if (todoFormModal && todoFormModal instanceof HTMLDialogElement) {
-      todoFormModal.close()
-    }
+  const openModal = () => {
+    const editProjectModal = document.getElementById("modify-project-modal")
+    if (!(editProjectModal && editProjectModal instanceof HTMLDialogElement)) { return }
+    editProjectModal.showModal()
   }
 
-  const onTodoFormCancel = () => {
-    setIsTodoFormOpen(false)
-    const todoFormModal = document.getElementById('todo-form-modal')
-    if (todoFormModal && todoFormModal instanceof HTMLDialogElement) {
-      todoFormModal.close()
-    }
-  }
-
-  const onEditProjectSubmit = (data: IProject) => {
-    console.log('submit edit project', data);
-    
-    try {
-      props.projectsManager.updateProject(data, project.id)
-      setIsEditProjectFormOpen(false)
-      const editProjectModal = document.getElementById("edit-project-modal")
-      if (!(editProjectModal && editProjectModal instanceof HTMLDialogElement)) { return}
-      editProjectModal.close()
-    } catch (error) {
-      alert(error)
-    }
-  }
-
-  const onEditProjectCancel = () => {
-    setIsEditProjectFormOpen(false)
-    const editProjectModal = document.getElementById("edit-project-modal")
-    if (!(editProjectModal && editProjectModal instanceof HTMLDialogElement)) { return}
-    editProjectModal.close()
-  }
+  const onCancel = () => {
+    setEditProjectIsOpen(false)
+  } 
 
   return (
     <div className="page" id="project-details">
-      {isTodoFormOpen && (
-        <TodoForm 
-          onSubmit={onTodoFormSubmit}
-          onCancel={onTodoFormCancel} 
-        />
-        
-      )}
-      {isEditProjectFormOpen && (
-        <ProjectForm 
-          project={project}
-          onSubmit={onEditProjectSubmit}
-          onCancel={onEditProjectCancel}
-        />
-      )}
+      {editProjectIsOpen && (
+        <ProjectForm openModal={openModal} onCancel={onCancel} project={project} projectsManager={projectsManager}  title={"Edit Project"}/>)}
+      
       <header>
         <div>
           <h2>{project.name}</h2> 
@@ -214,7 +150,7 @@ export function ProjectDetailsPage(props: Props) {
                   Click todo to change status
                 </h5>
               </div>
-              <div
+              <div className="Todo-container"
                 style={{
                   margin: 10,
                   display: "flex",
@@ -250,6 +186,5 @@ export function ProjectDetailsPage(props: Props) {
         />
       </div>
     </div>
-
   )
 }

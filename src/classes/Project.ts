@@ -33,6 +33,10 @@ export class Project implements IProject {
     this.id = uuidv4()
   }
 
+  getID() {
+    return this.id
+  }
+  
   addTodo(todo: any) {
     todo.id = uuidv4()
     this.todos.push(todo)
