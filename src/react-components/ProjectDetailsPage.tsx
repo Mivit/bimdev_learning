@@ -2,8 +2,9 @@ import * as React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { TodoForm } from './TodoForm';
 import { ProjectsManager } from '../classes/ProjectsManager';
-import { IProject, ProjectStatus, ProjectUserRole, Project } from '../classes/Project'
+import { IProject, ProjectStatus, ProjectUserRole, Project, ITodo, Todo } from '../classes/Project'
 import { ProjectForm } from './ProjectForm';
+import { TodoCard } from './TodoCard';
 
 interface Props {
   projectsManager: ProjectsManager
@@ -31,23 +32,32 @@ export function ProjectDetailsPage(props: Props) {
   }, [projectsManager])
 
   const [editProjectIsOpen, setEditProjectIsOpen] = React.useState(false);
+  const [addTodoIsOpen, setAddTodoIsOpen] = React.useState(false);
+  const [todos, setTodos] = React.useState<ITodo[]>(project.todos)
 
   React.useEffect(() => {
     if (editProjectIsOpen) {
-      openModal()
+      openProjectModal()
     }
   }, [editProjectIsOpen])
 
+  React.useEffect(() => {
+    if (addTodoIsOpen) {
+      openAddTodoModal()
+    }
+  }, [addTodoIsOpen])
+
   const onEditProjectClick = () => {
     setEditProjectIsOpen(true)
-    openModal()    
+    openProjectModal()    
   }
 
   const onAddTodoClick = () => {
-    console.log('add todo')
+    setAddTodoIsOpen(true)
+    openAddTodoModal()
   }
 
-  const openModal = () => {
+  const openProjectModal = () => {
     const editProjectModal = document.getElementById("modify-project-modal")
     if (!(editProjectModal && editProjectModal instanceof HTMLDialogElement)) { return }
     editProjectModal.showModal()
@@ -57,15 +67,25 @@ export function ProjectDetailsPage(props: Props) {
     setEditProjectIsOpen(false)
   } 
 
-  const onSubmitTodo = (todo: {}) => {
-    console.log(todo)
+  const openAddTodoModal = () => {
+    const todoFormModal = document.getElementById("todo-form-modal")
+    if (!(todoFormModal && todoFormModal instanceof HTMLDialogElement)) { return }
+    todoFormModal.showModal()
+  }
+
+  const onAddTodo = (newTodo: ITodo) => {
+    setTodos([...todos, newTodo])
+  }
+
+  const onTodoCancel = () => {
+      setAddTodoIsOpen(false)
   }
 
   return (
     <div className="page" id="project-details">
       {editProjectIsOpen && (
         <ProjectForm onCancel={onCancelProject} project={project} projectsManager={projectsManager}  title={"Edit Project"}/>)}
-        <TodoForm onSubmit={onSubmitTodo} onCancel={() => console.log('cancel')} />
+        <TodoForm onSubmit={onAddTodo} onCancel={onTodoCancel} projectsManager={projectsManager} id={routeParams.id}/>
       <header>
         <div>
           <h2>{project.name}</h2> 
@@ -180,7 +200,12 @@ export function ProjectDetailsPage(props: Props) {
                 </span>
               </div>
             </div>
-            <div id="todo-container" style={{ padding: "0 20px 10px 20px" }}></div>
+            <div id="todo-container" style={{ padding: "0 20px 10px 20px" }}>
+              {
+                todos.map(todo => (
+                  <TodoCard key={todo.id} todo={todo}/>
+              ))}
+            </div>
           </div>
         </div>
         <div

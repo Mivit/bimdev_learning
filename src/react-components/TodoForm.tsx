@@ -1,21 +1,48 @@
-import * as React from 'react';
+import * as React from 'react'
+import { ITodo } from '../classes/Project'
+import type { TodoStatus } from '../classes/Project'
+import { ProjectsManager } from '../classes/ProjectsManager'
 
 interface TodoFormProps {
-  onSubmit: (todo: {}) => void
+  onSubmit: (todo: ITodo) => void
   onCancel: () => void
+  projectsManager: ProjectsManager
+  id: string
+}
+
+const initialTodoState: ITodo = {
+  id: '',
+  name: '',
+  description: '',
+  status: 'Pending' as TodoStatus,
+  date: new Date()
 }
 
 export function TodoForm(props: TodoFormProps) {
-  const [todo, setTodo] = React.useState('')
+  const [todo, setTodo] = React.useState<ITodo>(initialTodoState)
 
-  const onHandleSubmit = (event: React.FormEvent) => {
+  const onFormSubmit = (event) => {
     event.preventDefault()
-    props.onSubmit(todo)
+    const newTodo = props.projectsManager.addProjectTodo(props.id, todo)
+    props.onSubmit(newTodo)
+    setTodo(initialTodoState)
+
+    const todoFormModal = document.getElementById("todo-form-modal")
+    if (!(todoFormModal && todoFormModal instanceof HTMLDialogElement)) { return }
+    todoFormModal.close()
   };
+
+  const onInputChange = (event) => {
+    const { name, value } = event.target
+    setTodo({
+      ...todo,
+      [name]: name === 'status' ? value as TodoStatus : value
+    })
+  }
 
   return (
     <dialog id="todo-form-modal">
-      <form onSubmit={onHandleSubmit}>
+      <form onSubmit={onFormSubmit}>
         <h2>Add Todo</h2>
         <div>
           <div className="form-field-container">
@@ -23,18 +50,28 @@ export function TodoForm(props: TodoFormProps) {
             <input
               type="text"
               id="todo"
-              name="todo"
+              name="name"
               value={todo.name}
-              onChange={(e) => setTodo(e.target.value)}
+              onChange={onInputChange}
             />
           </div>
           <div className="form-field-container">
             <label htmlFor="description">Description</label>
-            <textarea id="description" name="description"></textarea>
+            <textarea 
+              id="description" 
+              name="description"
+              value={todo.description}
+              onChange={onInputChange}
+            ></textarea>
           </div>
           <div className="form-field-container">
             <label htmlFor="status">Status</label>
-            <select id="status" name="status">
+            <select 
+              id="status" 
+              name="status"
+              value={todo.status}
+              onChange={onInputChange}
+              >
               <option value="Pending">Pending</option>
               <option value="Ongoing">Ongoing</option>
               <option value="Finished">Finished</option>

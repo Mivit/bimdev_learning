@@ -16,7 +16,7 @@ export function ProjectForm({onCancel, project, projectsManager, title}: Project
   const onFormSubmit = (event) => {
    event.preventDefault()
    const formData = new FormData(event.target)
-   console.log(initialProject);
+  //  console.log(initialProject);
    if (title === "New Project") {
     const newProject = projectsManager.newProject({
       name: formData.get('name') as string,
@@ -25,7 +25,7 @@ export function ProjectForm({onCancel, project, projectsManager, title}: Project
       projectStatus: formData.get('status') as ProjectStatus,
       finishDate: new Date(formData.get('finishDate') as string),
     })
-    console.log(newProject);
+    // console.log(newProject);
     setInitialProject(newProject)
    } else {
     const id = initialProject.id
@@ -89,7 +89,12 @@ export function ProjectForm({onCancel, project, projectsManager, title}: Project
           <label htmlFor="project_role">
             <span className="material-icons-round">person</span>Role
           </label>
-          <select id="project_role" name="userRole" value={initialProject.userRole} onChange={(event) => setInitialProject({...initialProject, userRole: event.target.value})}>
+          <select 
+            id="project_role" 
+            name="userRole" 
+            value={initialProject.userRole} 
+            onChange={(event) => setInitialProject({...initialProject, userRole: event.target.value as ProjectUserRole})}
+            >
             <option>Architect</option>
             <option>Engineer</option>
             <option>Developer</option>
@@ -100,7 +105,12 @@ export function ProjectForm({onCancel, project, projectsManager, title}: Project
             <span className="material-icons-round">not_listed_location</span>
             Status
           </label>
-          <select id="project_status" name="status" value={initialProject.projectStatus} onChange={(event) => setInitialProject({...initialProject, projectStatus: event.target.value})}>
+          <select 
+            id="project_status" 
+            name="status" 
+            value={initialProject.projectStatus} 
+            onChange={(event) => setInitialProject({...initialProject, projectStatus: event.target.value as ProjectStatus})}
+            >
             <option>Pending</option>
             <option>Active</option>
             <option>Finished</option>

@@ -12,6 +12,32 @@ export interface IProject {
 	finishDate: Date
 }
 
+export interface ITodo {
+  name: string
+  description: string
+  status: TodoStatus
+  date: Date
+}
+
+export class Todo implements ITodo {
+  name: string
+  description: string
+  status: TodoStatus
+  date: Date
+  id: string
+
+  constructor(data: ITodo) {
+    for (const key in data) {
+      this[key] = data[key]
+    }
+    this.id = uuidv4()
+  }
+
+  getID() {
+    return this.id
+  }
+}
+
 export class Project implements IProject {
 	//To satisfy IProject
   name: string
@@ -24,7 +50,7 @@ export class Project implements IProject {
   cost: number = 1000
   progress: number = 0
   id: string
-  todos: [] = []
+  todos: ITodo[] = []
 
   constructor(data: IProject) {
     for (const key in data) {
@@ -36,11 +62,14 @@ export class Project implements IProject {
   getID() {
     return this.id
   }
-  
-  addTodo(todo: any) {
-    todo.id = uuidv4()
-    this.todos.push(todo)
-    console.log(this.todos);
-    
+
+  addTodo(todo: ITodo) {
+    // Check if a todo with the same ID already exists
+    const todoExists = this.todos.some(existingTodo => existingTodo.id === todo.id)
+    if (!todoExists) {
+      this.todos.push(todo)
+    } else {
+      console.warn(`Todo with ID ${todo.id} already exists in the project.`)
+    }
   }
 }

@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { Project } from '../classes/Project';
+import { ITodo, Project } from '../classes/Project';
 
 interface TodoCardProps {
-  project: Project
+  todo: ITodo
 }
+
 
 // change status on todo
 
@@ -12,6 +13,8 @@ interface TodoCardProps {
 // delete todo
 
 export function TodoCard(props: TodoCardProps) {
+  console.log('TodoCard', props.todo);
+  
   return (
     <div className='todo-card'>
       <div

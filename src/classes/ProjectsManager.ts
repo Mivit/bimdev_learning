@@ -1,5 +1,6 @@
-import { IProject, Project } from './Project'
+import { IProject, ITodo, Project } from './Project'
 import type { ProjectStatus, ProjectUserRole } from './Project'
+import { v4 as uuidv4 } from 'uuid'
 
 const  availableColors = ["#ca8134", "#55ad99", "#a55d93", "#ad99b9", "#ad2133", "#21ad33", "#bbaaaa"]
 
@@ -38,20 +39,7 @@ export class ProjectsManager {
     } 
     
     const newProject = new Project(data) 
-    // const pElemen = newProject.ui.getElementsByTagName("p")
-    // pElemen[0].style.backgroundColor = availableColors[Math.floor(Math.random()*6)]
-    // newProject.ui.addEventListener("click", () => {
-    //   const projectsPage = document.getElementById("projects-page")
-    //   const detailsPage = document.getElementById("project-details")
-    //   if (!(projectsPage && detailsPage)) { return }
-    //   projectsPage.style.display = "none"
-    //   detailsPage.style.display = "flex"
-    //   this.setDetailsPage(newProject)
-    //   // console.log('newProject', newProject.todos);
-      
-    // })
-    // append the new project to the projects list in the UI and our list
-    // console.log('newProject', newProject);
+
     this.list.push(newProject)   
     this.onProjectCreated(newProject)
     return newProject
@@ -90,6 +78,20 @@ export class ProjectsManager {
     this.onProjectUpdated(project)
     return project
   }
+  addProjectTodo(projectId: string, todoData: ITodo): ITodo {
+    const project = this.getProject(projectId)
+    if (project) {
+      const newTodo = {
+        ...todoData,
+        id: uuidv4() // Ensure a unique ID for each todo
+      }
+      project.todos.push(newTodo)
+      return newTodo
+    }
+    throw new Error('Project not found')
+  }
+  updateProjectTodos(id: string, todo: ITodo) {}
+  deleteProjectTodos(id: string, todo: ITodo) {}
 
   getProject(id: string): Project | undefined {
     return this.list.find(project => project.id === id)
@@ -102,7 +104,6 @@ export class ProjectsManager {
   deleteProject(id: string): void {
     const project = this.getProject(id)
     if (!project) {return}
-    project.ui.remove()
     const remainingProjects = this.list.filter(project => project.id !== id)
     this.list = remainingProjects
     this.onProjectDeleted(project)
