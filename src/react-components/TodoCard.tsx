@@ -13,17 +13,18 @@ interface TodoCardProps {
 // delete todo
 
 export function TodoCard(props: TodoCardProps) {
-  console.log('TodoCard', props.todo);
+  // console.log('TodoCard', props.todo)
+
+  const { todo } = props
   
   return (
-    <div className='todo-card'>
+    <div className='todo-item'>
       <div
         style={{
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between"
-        }}
-      >
+        }}>
         <div
           style={{
             display: "flex",
@@ -31,23 +32,23 @@ export function TodoCard(props: TodoCardProps) {
             borderRadius: 5,
             padding: 10,
             backgroundColor: "#969696"
-          }}
-        >
+          }}>
           <span className="material-icons-round">construction</span>
+          <span className="material-icons-round">check</span>
         </div>
         <div style={{ padding: "0 10px" }}>
           <h5 id="todo_title">
-            ${"{"}todo.title{"}"}
+            {todo.name}
           </h5>
           <p id="todo_description">
-            ${"{"}todo.description{"}"}
+            {todo.description}
           </p>
           <p id="todo_status" style={{ padding: "10px 0 0 0" }}>
-            ${"{"}todo.status{"}"}
+            {todo.status}
           </p>
         </div>
+        <p className="todo-date">{todo.date.toLocaleDateString()}</p>
       </div>
-      <p className="todo-date">Fri, 20 sep</p>
     </div>
 
   )

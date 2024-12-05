@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { TodoForm } from './TodoForm';
 import { ProjectsManager } from '../classes/ProjectsManager';
-import { IProject, ProjectStatus, ProjectUserRole, Project, ITodo, Todo } from '../classes/Project'
+import { Project, ITodo } from '../classes/Project'
 import { ProjectForm } from './ProjectForm';
 import { TodoCard } from './TodoCard';
 
@@ -27,13 +27,23 @@ export function ProjectDetailsPage(props: Props) {
   }  
  
   React.useEffect(() => {
-    console.log("ProjectsManager state updated", projectsManager)
-    
+    // console.log("ProjectsManager state updated", projectsManager)
   }, [projectsManager])
 
   const [editProjectIsOpen, setEditProjectIsOpen] = React.useState(false);
   const [addTodoIsOpen, setAddTodoIsOpen] = React.useState(false);
-  const [todos, setTodos] = React.useState<ITodo[]>(project.todos)
+  const [todos, setTodos] = React.useState<ITodo[]>([])
+  
+  // Initialize the todos state from the project when the component mounts
+  React.useEffect(() => {
+    setTodos(project.todos)
+  }, [project.todos])
+
+  React.useEffect(() => {
+    if (addTodoIsOpen) {
+      openAddTodoModal()
+    }
+  }, [addTodoIsOpen])
 
   React.useEffect(() => {
     if (editProjectIsOpen) {
@@ -41,11 +51,9 @@ export function ProjectDetailsPage(props: Props) {
     }
   }, [editProjectIsOpen])
 
-  React.useEffect(() => {
-    if (addTodoIsOpen) {
-      openAddTodoModal()
-    }
-  }, [addTodoIsOpen])
+  const onProjectUpdated = () => {
+    setProjects([...projectsManager.list])
+  }
 
   const onEditProjectClick = () => {
     setEditProjectIsOpen(true)
@@ -73,19 +81,29 @@ export function ProjectDetailsPage(props: Props) {
     todoFormModal.showModal()
   }
 
-  const onAddTodo = (newTodo: ITodo) => {
-    setTodos([...todos, newTodo])
+  const onTodoCancel = () => {
+    setAddTodoIsOpen(false) 
   }
 
-  const onTodoCancel = () => {
-      setAddTodoIsOpen(false)
+  const onAddTodo = (newTodo: ITodo) => {
+    // setTodos((prevTodos) => [...prevTodos, newTodo])
+    // console.log(todos);
+    onProjectUpdated()    
   }
 
   return (
     <div className="page" id="project-details">
       {editProjectIsOpen && (
-        <ProjectForm onCancel={onCancelProject} project={project} projectsManager={projectsManager}  title={"Edit Project"}/>)}
-        <TodoForm onSubmit={onAddTodo} onCancel={onTodoCancel} projectsManager={projectsManager} id={routeParams.id}/>
+        <ProjectForm 
+          onCancel={onCancelProject} 
+          project={project} 
+          projectsManager={projectsManager}  
+          title={"Edit Project"}/>)}
+        <TodoForm 
+          onSubmit={onAddTodo}
+          onCancel={onTodoCancel} 
+          projectsManager={projectsManager} 
+          id={routeParams.id}/>
       <header>
         <div>
           <h2>{project.name}</h2> 

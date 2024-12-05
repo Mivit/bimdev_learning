@@ -79,7 +79,13 @@ export function TodoForm(props: TodoFormProps) {
           </div>
           <div className="form-field-container">
             <label htmlFor="date">Date</label>
-            <input type="date" id="date" name="date" />
+            <input 
+              type="date" 
+              id="date" 
+              name="date" 
+              value={todo.date.toISOString().split('T')[0]}
+              onChange={(event) => setTodo({ ...todo, date: new Date(event.target.value) })}
+            />
           </div>
           <div className="button-group" >
             <button type="submit" className='btn-primary'>Add</button>

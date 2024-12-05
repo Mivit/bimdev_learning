@@ -9,6 +9,9 @@
   --status-ok: #76c27b;
   --status-warning: #e8b556;
   --status-alert: #e85b56;
+  --status-ongoing: #e8b556;
+  --status-pending:  #e85b56;
+  --stauts-finished: #76c27b;
   --background: #202124;
   --background-100: #26282b;
   --background-200: #3b3c3f;
@@ -345,4 +348,16 @@ div .error-dialog {
 
 .alert {
   background-color: var(--status-alert);
+}
+
+.ongoing {
+  background-color: var(--status-ongoing);
+}
+
+.pending {
+  background-color: var(--status-pending);
+}
+
+.finished {
+  background-color: var(--status-finished);
 }
